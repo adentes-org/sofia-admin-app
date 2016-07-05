@@ -52,7 +52,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 		users : {},
 		fiches : {}
 	}
-	
+
 	//We load config in cache (localstorage)
 	if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion != 'undefined' && localStorage.SofiaDBVersion != '1') { //Check if data in localStorage is compatible
 		if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
@@ -66,10 +66,10 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 		if (localStorage.SofiaDBName && localStorage.SofiaDBName != 'undefined') { //We have FicheDBName in cache
 			db.config.dbname.user = localStorage.SofiaFicheDBName
 		}
-		db.tools.setUrl(); //re-generate PouchDb object;
+		//db.tools.setUrl(); //re-generate PouchDb object; //Call by login already
 	}else{
-		db.tools.askCredential();
+		//db.tools.askCredential(); //Call by login already
 	}
-	
+
 	return db;
 });

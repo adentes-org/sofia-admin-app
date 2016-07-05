@@ -1,4 +1,4 @@
-define(["jquery","app/pages/memo"], function($,memo) { //Load all page JS scripts
+define(["jquery","vue","app/pages/memo"], function($,Vue,memo) { //Load all page JS scripts
 	var pages =  {
 		home: memo,
 		menu: {
@@ -12,14 +12,25 @@ define(["jquery","app/pages/memo"], function($,memo) { //Load all page JS script
 		tabs : {
 			memo : memo,
 		},
-		components : {
-
-		}
+		components : {}
 	}
-	//*
+
+	//Menu components
 	pages.components.menu = Vue.extend({
-  		template: '<div id="menu"><a v-for="(id, txt) in menu" id="{{ id }}" >{{ txt }}</a></div>'
+  		props: ['current'],
+			data: function () {
+    		return { menu: pages.menu	}
+  		},
+  		template: '<div id="menu"><a v-on:click="changeView" class="button {{ current !== id ? \'button-outline\' : \'\'}}" v-for="(id, txt) in menu" id="{{ id }}" >{{ txt }}</a></div>',
+			methods:{
+				changeView : function(e){
+					  //console.log(e,$(e.srcElement).attr("id"));
+						this.current = $(e.srcElement).attr("id");
+				}
+			}
 	});
+
+  //Pages components
 	for (var id in pages.tabs) {
 	  pages.components[id] = Vue.extend(pages.tabs[id]);
 	}
