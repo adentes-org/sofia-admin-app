@@ -2,9 +2,12 @@ requirejs.config({
     baseUrl: "assets",
     paths: {
       app: "js",
-	     lib: "lib",
+	    lib: "lib",
+
+	    main: "js/main",
 
       jquery: 'lib/jquery/jquery-3.0.0.min',
+      trumbowyg: 'lib/trumbowyg/trumbowyg.min',
 
       vue: 'lib/vuejs/vue.min',
 	    pouchdb: 'lib/pouchdb/pouchdb-5.4.4.min',
@@ -13,12 +16,13 @@ requirejs.config({
 	    objectdiff: 'lib/objectdiff/objectDiff'
     },
     shim: {
-        "app/main": {
+        "main": {
             exports: 'S'
         },
         jquery: {
             exports: '$'
         },
+        trumbowyg: ['jquery'],
         vue: {
             exports: 'Vue'
         },
@@ -35,4 +39,4 @@ requirejs.config({
 });
 
 // Load the main app module to start the app
-requirejs(["app/main"]);
+requirejs(["main"]);

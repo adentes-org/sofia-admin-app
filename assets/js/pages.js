@@ -1,4 +1,4 @@
-define(["jquery","vue","app/pages/memo"], function($,Vue,memo) { //Load all page JS scripts
+define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/team","app/pages/export","app/pages/conflict","app/pages/stat"], function($,Vue,memo,configuration,team,exp,conflict,stat) { //Load all page JS scripts
 	var pages =  {
 		home: memo,
 		menu: {
@@ -10,7 +10,12 @@ define(["jquery","vue","app/pages/memo"], function($,Vue,memo) { //Load all page
 			"stat": "Stats"
 		},
 		tabs : {
+			configuration : configuration,
 			memo : memo,
+			team : team,
+			export : exp,
+			conflict : conflict,
+			stat : stat,
 		},
 		components : {}
 	}
@@ -24,14 +29,15 @@ define(["jquery","vue","app/pages/memo"], function($,Vue,memo) { //Load all page
   		template: '<div id="menu"><a v-on:click="changeView" class="button {{ current !== id ? \'button-outline\' : \'\'}}" v-for="(id, txt) in menu" id="{{ id }}" >{{ txt }}</a></div>',
 			methods:{
 				changeView : function(e){
-					  //console.log(e,$(e.srcElement).attr("id"));
-						this.current = $(e.srcElement).attr("id");
+        		this.$dispatch('change-view', $(e.target).attr("id"))
 				}
 			}
 	});
 
   //Pages components
 	for (var id in pages.tabs) {
+		//console.log(pages.tabs[id].template);
+		pages.tabs[id].template = '<div class="page" id="'+id+'">' + pages.tabs[id].template + '</div>'; //Force wrap around page element
 	  pages.components[id] = Vue.extend(pages.tabs[id]);
 	}
 

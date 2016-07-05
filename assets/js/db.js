@@ -3,8 +3,12 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 	var db = {
 		tools : {
 			login : function() {
+				if(typeof db.users.info !== "function"){
+					db.tools.askCredential();
+				}
 				return db.users.info().then(function (info) {
 					//We are logged in
+					db.tools.bckpConfig();
 					return info;
 				}).catch(function (error) {
 					//We are not logged in
@@ -13,13 +17,20 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					return db.tools.login();
 				})
 			},
+			getUrl : function() {
+				return {
+					user : db.config.url + '/' + db.config.dbname.user,
+					fiche : db.config.url + '/' + db.config.dbname.fiche
+				}
+			},
 			setUrl : function() {
-				db.users = new PouchDB(db.config.url + '/' + db.config.dbname.user, {
+				db.config.dbname.fiche = prompt('DB Name :', db.config.dbname.fiche);//TODO not use prompt
+				urls = db.tools.getUrl();
+				db.users = new PouchDB(urls.user, {
 					auth : db.config.creds
 				});
-				//db.fiches = new PouchDB(db.config.url + db.config.dbname.fiche, { //TODO not use prompt
 				//*
-				db.fiches = new PouchDB(db.config.url + '/' + prompt('DB Name :', db.config.dbname.fiche), {
+				db.fiches = new PouchDB(urls.fiche, {
 					auth : db.config.creds
 				});
 				//*/
@@ -36,6 +47,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 			bckpConfig : function() {
 				localStorage.SofiaDBVersion = '1';
 				localStorage.SofiaCreds = JSON.stringify(db.config.creds);
+				localStorage.SofiaDBName = db.config.dbname.fiche;
 			}
 		},
 		config : {
@@ -54,7 +66,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 	}
 
 	//We load config in cache (localstorage)
-	if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion != 'undefined' && localStorage.SofiaDBVersion != '1') { //Check if data in localStorage is compatible
+	if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion !== 'undefined' && localStorage.SofiaDBVersion === '1') { //Check if data in localStorage is compatible
 		if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
 			db.config.creds = JSON.parse(localStorage.SofiaCreds)
 		}
@@ -66,10 +78,10 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 		if (localStorage.SofiaDBName && localStorage.SofiaDBName != 'undefined') { //We have FicheDBName in cache
 			db.config.dbname.user = localStorage.SofiaFicheDBName
 		}
-		//db.tools.setUrl(); //re-generate PouchDb object; //Call by login already
+		db.tools.setUrl();
 	}else{
-		//db.tools.askCredential(); //Call by login already
+		db.tools.askCredential();
 	}
-
+	console.log(db.config);
 	return db;
 });

@@ -1,28 +1,36 @@
-define(["jquery", "vue", "pouchdb","app/pages","app/db"], function($,Vue,PouchDB,pages,db) {
+define(["jquery", "vue", "pouchdb","app/pages","app/db", "trumbowyg"], function($,Vue,PouchDB,pages,db) {
 	var S = {
 		db: db,
 		pages : pages
 	};
+	window.S = S;
 	$(function(){
 		$("body>.app-loading").remove();
-		var base = "<h1>SOFIA - Admin console</h1><menu :current.sync='currentView' ></menu>{{currentView}}"
-		for (var id in pages.tabs) {
-				base += "<"+id+" :is='currentView' ></"+id+">"
-		}
+		var base = "<h1>SOFIA - Admin console</h1><menu :current='view'></menu><component v-ref:page :db='db' :is='view'></component>"  //https://vuejs.org/guide/components.html#Dynamic-Components
 		$("body>.app").html(base);
+
 		S.app = new Vue({
 		  el: '.app',
 		  data: {
-		    currentView: 'memo'
+		    view: 'configuration',
+			  db: db
 		  },
-		  components: pages.components
+		  components: pages.components,
+			events: {
+				'change-view': function (id) {
+					console.log("Showing page : "+id);
+					this.view = id;
+					//S.app.$refs.page.$dispatch('onload', "") //To be delayed for the componenet to be update
+					window.setTimeout("S.app.$refs.page.$dispatch('onload')",100);
+				}
+			}
 		})
-		console.log(pages.menu);
-		/*
+		//*
 		db.tools.login().then(function(info){
 			console.log("We are in !",info)
+			window.setTimeout("S.app.$refs.page.$dispatch('onload')",100);
 		})
-		*/
+		//*/
 	})
 	return S;
 });
