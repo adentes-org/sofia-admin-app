@@ -65,7 +65,10 @@ define(["jquery", "trumbowyg"], function($) {
 	          this.getMemo();
 	        },
 	        onchange : function(change){
-	          this.getMemo();
+	          if(typeof change.message !== "undefined"){ 
+		         return; //This is a error event do not update.
+	          }
+                  this.getMemo();
 	        }
       }
 	};
