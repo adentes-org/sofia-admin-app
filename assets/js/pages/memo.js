@@ -32,8 +32,8 @@ define(["jquery", "trumbowyg"], function($) {
 	          var obj = this;
 	          console.log("Vue obj : "+this.memo+" rev:"+this.rev);
 	          //var memo = this.memo;
-	          //var memo = $('#memo textarea').val(); this.memo = memo;
-	          var memo = $('#memo textarea').trumbowyg('html'); this.memo = memo;
+	          var memo = $('#memo textarea').val(); this.memo = memo;
+	          //var memo = $('#memo textarea').trumbowyg('html'); this.memo = memo;
 	          console.log("Vue obj : "+this.memo+" rev:"+this.rev);
 	
 	          var attachment = new Blob([memo], { type: 'text/html' });
