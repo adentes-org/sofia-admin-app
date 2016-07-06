@@ -39,6 +39,7 @@ define(["jquery"], function($) {
   	  this.getUsers();
   	},
   	onchange : function(change){
+  	  this.getUsers();
   	}
      }
   };
