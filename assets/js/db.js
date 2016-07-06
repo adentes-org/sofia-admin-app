@@ -1,6 +1,7 @@
 define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 	//Base object
 	var db = {
+		isLoggued : false,
 		tools : {
 			monitor : function(data,onchange) {
 				data.changes({
@@ -25,6 +26,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}
 				return db.users.info().then(function (info) {
 					//We are logged in
+					db.isLoggued = true;
 					db.tools.bckpConfig();
 					return info;
 				}).catch(function (error) {
