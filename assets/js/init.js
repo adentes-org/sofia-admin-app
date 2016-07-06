@@ -14,7 +14,10 @@ requirejs.config({
 	    pouchdb: 'lib/pouchdb/pouchdb-5.4.4.min',
 
 	    qrcode: 'lib/qrcode/qrcode.min',
-	    objectdiff: 'lib/objectdiff/objectDiff'
+	    objectdiff: 'lib/objectdiff/objectDiff',
+	    highcharts: 'lib/highcharts/highcharts',
+	    "highcharts-more": 'lib/highcharts/highcharts-more',
+	    "highcharts-solid-gauge": 'lib/highcharts/modules/solid-gauge'
     },
     shim: {
         "main": {
@@ -35,7 +38,12 @@ requirejs.config({
         },
         objectdiff: {
             exports: 'objectDiff'
-        }
+        },
+        highcharts: {
+            exports: 'Highcharts'
+        },
+        "highcharts-more": ['highcharts'],
+        "highcharts-solid-gauge": ['highcharts',"highcharts-more"]
 	}
 });
 
