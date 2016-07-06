@@ -2,7 +2,7 @@ define(["jquery"], function($) {
   return {
     props: ['db'],
     data: function () {
-  	return {users : []};
+  	return {needUpdateUserList: false,users : []};
     },
     template: '<button class="button-primary float-right" @click="updtUsersList">Update team list in App</button>'+
               '<h2>Team Management</h2>'+
@@ -28,6 +28,9 @@ define(["jquery"], function($) {
             users.push(user);
           });
           vue.users=users; //Apply to vue el
+          if(vue.needUpdateUserList){
+            vue.updtUsersList();
+          }
         }).catch(function (err) {
           //TODO handle err
           console.log(err);
@@ -71,7 +74,8 @@ define(["jquery"], function($) {
           // handle response
           console.log(response);
   	      //vue.getUsers(); //not necessayer (trigger by onchange)
-          vue.updtUsersList();
+          vue.needUpdateUserList = true;
+          //vue.updtUsersList();
           $('#add-user input').val('').removeAttr('disabled');
           $('#add-user button').removeAttr('disabled').text('Sauvegardé !').css('background-color', 'green');
           window.setTimeout('$("#add-user button").text("Valider").css("background-color", "#9b4dca")', 1000);
@@ -88,7 +92,8 @@ define(["jquery"], function($) {
         
         if (confirm('Etes vous sur de supprimer : ' + user.name + ' ?')) {
           this.db.users.remove(user._id, user._rev).then(function (response) {
-            vue.updtUsersList();
+            vue.needUpdateUserList = true;
+            //vue.updtUsersList();
           }).catch(function (err) {
             console.log(err);
             alert(err.message);
