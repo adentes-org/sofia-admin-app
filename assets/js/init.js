@@ -6,8 +6,8 @@ requirejs.config({
 
 	    main: "js/main",
 
-      //jquery: 'lib/jquery/jquery-3.0.0.min',
-      jquery: '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min',
+      jquery: 'lib/jquery/jquery-3.0.0.min',
+      //jquery: '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min',
       trumbowyg: 'lib/trumbowyg/trumbowyg.min',
 
       vue: 'lib/vuejs/vue.min',
