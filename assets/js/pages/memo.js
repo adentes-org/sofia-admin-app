@@ -18,7 +18,7 @@ define(["jquery", "trumbowyg"], function($) {
 		
 		          var reader = new FileReader();
 		          reader.onload = function (event) {
-		            console.log("Memo result : ",reader.result)
+		            console.log("Memo result : "+reader.result)
 		            vue.memo = reader.result;
 		            $('#memo textarea').val(vue.memo);
 		          };
