@@ -36,19 +36,11 @@ define(["jquery"], function($) {
     	resetPass: function(event){
     	  var vue = this;
     	  var el = $(event.target).parent().parent(); //Get tr el
-        var obj = this.users[el.attr('data-i')];
+        var user = this.users[el.attr('data-i')];
         
-    	  console.log('Reseting user pass ...', obj);
-        this.db.users.put({
-          _id: obj.id,
-          _rev: obj.rev,
-          type: 'user',
-          name: obj.name,
-          password: prompt('Choose a password :', vue.getRandomPass()),
-          roles: [
-             'equipier',
-          ],
-        }).then(function (response) {
+    	  console.log('Reseting user pass ...', user);
+    	  user.password = prompt('Choose a password :', vue.getRandomPass());
+        this.db.users.put(user).then(function (response) {
           console.log(response);
   	      this.getUsers();
         }).catch(function (err) {
