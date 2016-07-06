@@ -102,6 +102,7 @@ define(["jquery"], function($) {
   	  },
   	  updtUsersList: function(){
     	  var vue = this;
+        vue.needUpdateUserList = false; //clear tag
   	    console.log('Updating users list ...');
         $('#team>button').attr('disabled', 'disabled').text('Sending ...').blur();
 
