@@ -29,7 +29,7 @@ define(["jquery"], function($) {
           //TODO handle err
           console.log(err);
         });
-      }
+      },
     	resetPass: function(event){},
   	  addUser : function(event){},
   	  delUser : function(event){}
