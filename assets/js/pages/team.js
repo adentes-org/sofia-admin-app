@@ -103,7 +103,7 @@ define(["jquery"], function($) {
   	  updtUsersList: function(){
     	  var vue = this;
   	    console.log('Updating users list ...');
-        $('#teams>button').attr('disabled', 'disabled').text('Sending ...').blur();
+        $('#team>button').attr('disabled', 'disabled').text('Sending ...').blur();
 
         var list = vue.users.map(function(user) {
           return user.name;
@@ -115,8 +115,8 @@ define(["jquery"], function($) {
         }).then(function(result) {
           // handle response
           console.log(result);
-          $('#teams>button').removeAttr('disabled').text('Sauvegardé !').css('background-color', 'green');
-          window.setTimeout('$("#teams>button").text("Update team list in App").css("background-color", "#9b4dca")', 3000);
+          $('#team>button').removeAttr('disabled').text('Sauvegardé !').css('background-color', 'green');
+          window.setTimeout('$("#team>button").text("Update team list in App").css("background-color", "#9b4dca")', 3000);
         }).catch(function (err) {
           console.log(err);
 });
