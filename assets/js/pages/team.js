@@ -42,7 +42,7 @@ define(["jquery"], function($) {
     	  user.password = prompt('Choose a password :', vue.getRandomPass());
         this.db.users.put(user).then(function (response) {
           console.log(response);
-  	      this.getUsers();
+  	      vue.getUsers();
         }).catch(function (err) {
           console.log(err);
           alert(err.message);
