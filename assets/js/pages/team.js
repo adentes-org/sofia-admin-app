@@ -9,7 +9,7 @@ define(["jquery"], function($) {
                 '<thead><tr><th>Name</th><th>Password</th><th>Roles</th><th>Action</th></tr></thead>'+
                 '<tbody>'+
                 	'<tr id="add-user"><td><input type="text" id="name" placeholder="username" style="width: 240px;"></td><td><input type="text" id="password" placeholder="password" style="width: 240px;"></td><td></td><td><button class="button-primary" @click="addUser;">Ajouter</button></td></tr>'+
-                	'<tr v-for="(i, user) in users" data-name="{{user.name}}" data-id="{{user._id}}" data-rev="{{user._rev}}"><td>{{user.name}}</td><td><button class="button button-outline" @click="resetPass">Reset</button></td><td>{{user.roles|json}}</td><td><button class="button button-outline" @click="delUser">Delete</button></td></tr>'+
+                	'<tr v-for="(i, user) in users" data-i="{{i}}" data-name="{{user.name}}" data-id="{{user._id}}" data-rev="{{user._rev}}"><td>{{user.name}}</td><td><button class="button button-outline" @click="resetPass">Reset</button></td><td>{{user.roles|json}}</td><td><button class="button button-outline" @click="delUser">Delete</button></td></tr>'+
                 '</tbody>'+
               '</table>',
     methods:{
@@ -30,17 +30,42 @@ define(["jquery"], function($) {
           console.log(err);
         });
       },
-    	resetPass: function(event){},
+    	getRandomPass: function(event){
+    	  return Math.random().toString(36).substr(2, 5)
+    	},
+    	resetPass: function(event){
+    	  var vue = this;
+    	  var el = $(event.target).parent().parent(); //Get tr el
+        var obj = this.users[el.attr('data-i')];
+        
+    	  console.log('Reseting user pass ...', obj);
+        this.db.users.put({
+          _id: obj.id,
+          _rev: obj.rev,
+          type: 'user',
+          name: obj.name,
+          password: prompt('Choose a password :', vue.getRandomPass()),
+          roles: [
+             'equipier',
+          ],
+        }).then(function (response) {
+          console.log(response);
+  	      this.getUsers();
+        }).catch(function (err) {
+          console.log(err);
+          alert(err.message);
+        });
+    	},
   	  addUser : function(event){},
   	  delUser : function(event){}
     },
     events: {
-  	onload : function(){
-  	  this.getUsers();
-  	},
-  	onchange : function(change){
-  	  this.getUsers();
-  	}
+  	  onload : function(){
+  	    this.getUsers();
+  	  },
+  	  onchange : function(change){
+  	    this.getUsers();
+  	  }
      }
   };
 })
