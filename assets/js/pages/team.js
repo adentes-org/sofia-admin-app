@@ -17,7 +17,7 @@ define(["jquery"], function($) {
         var vue = this;
                     //Filling user table
         this.db.users.allDocs({ include_docs: true }).then(function (result) {
-          console.log("User list",result);
+          console.log("Nb user (+ _design docs) : "+result.rows.length);
           $.each(result.rows, function (index, value) {
             var user = value.doc;
             if (user.type != 'user')
