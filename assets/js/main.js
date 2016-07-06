@@ -25,7 +25,7 @@ define(["jquery", "vue", "pouchdb","app/pages","app/db", "trumbowyg"], function(
 				}
 			}
 		})
-		//*
+		/*
 		db.tools.login().then(function(info){
 			console.log("We are in !",info)
 			db.tools.monitor(db.users,function(change){
