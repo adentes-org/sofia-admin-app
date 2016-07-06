@@ -2,6 +2,23 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 	//Base object
 	var db = {
 		tools : {
+			monitor : function(data,onchange) {
+				data.changes({
+				  since: 'now',
+				  live: true,
+				  include_docs: false
+				}).on('change', function(change) {
+				  // handle change
+				  onchange(change);
+				}).on('complete', function(info) {
+				  // changes() was canceled
+				  // We reload monitor and fire change (since db has maybe change)
+				  onchange(info);
+				  db.tools.monitor(data,onchange);
+				}).on('error', function (err) {
+				  console.log(err);
+				});
+			},
 			login : function() {
 				if(typeof db.users.info !== "function"){
 					db.tools.askCredential();
@@ -16,6 +33,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					db.tools.askCredential();
 					return db.tools.login();
 				})
+				//TODO check fiche db access
 			},
 			getUrl : function() {
 				return {
