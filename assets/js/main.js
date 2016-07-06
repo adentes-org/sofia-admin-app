@@ -28,6 +28,12 @@ define(["jquery", "vue", "pouchdb","app/pages","app/db", "trumbowyg"], function(
 		//*
 		db.tools.login().then(function(info){
 			console.log("We are in !",info)
+			db.tools.monitor(db.users,function(change){
+				S.app.$refs.page.$dispatch('onchange',change); //Forward change event
+			});
+			db.tools.monitor(db.fiches,function(change){
+				S.app.$refs.page.$dispatch('onchange',change); //Forward change event
+			});
 			window.setTimeout("S.app.$refs.page.$dispatch('onload')",100);
 		})
 		//*/
