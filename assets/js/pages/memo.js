@@ -20,7 +20,8 @@ define(["jquery", "trumbowyg"], function($) {
 		          reader.onload = function (event) {
 		            console.log("Memo result : "+reader.result)
 		            vue.memo = reader.result;
-		            $('#memo textarea').val(vue.memo);
+			    $('#memo textarea').trumbowyg('html', vue.memo);
+		            //$('#memo textarea').val(vue.memo);
 		          };
 		          reader.readAsText(doc._attachments['memo.html'].data);
 		        }).catch(function (err) {
@@ -55,7 +56,9 @@ define(["jquery", "trumbowyg"], function($) {
 	events: {
 	        onload : function(){
 	          //$('#memo textarea').val(this.memo);
-	          $('#memo textarea').trumbowyg();
+	          $('#memo textarea').trumbowyg({
+			autogrow: true
+		  });
 	          this.getMemo();
 	        },
 	        onchange : function(change){
