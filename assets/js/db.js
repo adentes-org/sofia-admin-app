@@ -73,7 +73,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 			bckpConfig : function() {
 				localStorage.SofiaDBVersion = '1';
 				localStorage.SofiaCreds = JSON.stringify(db.config.creds);
-				localStorage.SofiaDBName = db.config.dbname.fiche;
+				localStorage.SofiaFicheDBName = db.config.dbname.fiche;
 			}
 		},
 		config : {
@@ -101,8 +101,8 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 			db.config.url = localStorage.SofiaDBURL
 		}
 		*/
-		if (localStorage.SofiaDBName && localStorage.SofiaDBName != 'undefined') { //We have FicheDBName in cache
-			db.config.dbname.user = localStorage.SofiaFicheDBName
+		if (localStorage.SofiaFicheDBName && localStorage.SofiaFicheDBName != 'undefined') { //We have FicheDBName in cache
+			db.config.dbname.fiche = localStorage.SofiaFicheDBName
 		}
 		db.tools.setUrl();
 	}else{
