@@ -7,7 +7,9 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				data.changes({
 				  since: 'now',
 				  live: true,
-				  include_docs: false
+				  include_docs: false,
+				  timeout: 15000,
+				  heartbeat: 30000
 				}).on('change', function(change) {
 				  // handle change
 				  onchange(change);
