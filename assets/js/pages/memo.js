@@ -10,17 +10,17 @@ define(["jquery", "trumbowyg"], function($) {
   	template: '<h2>Memo edition</h2><textarea v-model="memo" data-rev="{{rev}}"></textarea><button class="button-primary" @click="updateMemo" style="float: right;">Valider</button>',
 	methods:{
 	        getMemo : function(){
-	        	var data = this.data
+	        	var vue = this;
 		        this.db.fiches.get('_design/sofia-config', { attachments: true, binary: true }).then(function (doc) {
 		          // handle result
 		          console.log("Get memo",doc)
-		          data.rev = doc._rev;
+		          vue.rev = doc._rev;
 		
 		          var reader = new FileReader();
 		          reader.onload = function (event) {
 		            console.log("Memo result : ",reader.result)
-		            data.memo = reader.result;
-		            $('#memo textarea').val(data.memo);
+		            vue.memo = reader.result;
+		            $('#memo textarea').val(vue.memo);
 		          };
 		          reader.readAsText(doc._attachments['memo.html'].data);
 		        }).catch(function (err) {
