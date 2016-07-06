@@ -50,11 +50,13 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				urls = db.tools.getUrl();
 				db.users = new PouchDB(urls.user, {
 					auth : db.config.creds,
+					ajax: {timeout: 20000},
 					skip_setup: true
 				});
 				//*
 				db.fiches = new PouchDB(urls.fiche, {
 					auth : db.config.creds,
+					ajax: {timeout: 20000},
 					skip_setup: true
 				});
 				//*/
