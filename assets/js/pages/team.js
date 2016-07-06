@@ -15,7 +15,8 @@ define(["jquery"], function($) {
     methods:{
       getUsers : function(){
         var vue = this;
-        vue.users = [];
+        //vue.users = [];
+        vue.users.length = 0
         //Filling user table
         this.db.users.allDocs({ include_docs: true }).then(function (result) {
           console.log("Nb user (+ _design docs) : "+result.rows.length);
