@@ -79,7 +79,21 @@ define(["jquery"], function($) {
           alert(err.message);
         });
   	  },
-  	  delUser : function(event){},
+  	  delUser : function(event){
+    	  var vue = this;
+    	  var el = $(event.target).parent().parent(); //Get tr el
+        var user = this.users[el.attr('data-i')];
+  	    console.log('Deleting user ...', user);
+        
+        if (confirm('Etes vous sur de supprimer : ' + user.name + ' ?')) {
+          this.db.users.remove(user._id, user._rev).then(function (response) {
+            vue.updtUsersList();
+          }).catch(function (err) {
+            console.log(err);
+            alert(err.message);
+          });
+        }
+  	  },
   	  updtUsersList: function(){},
     },
     events: {
