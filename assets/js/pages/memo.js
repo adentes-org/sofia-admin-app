@@ -54,8 +54,9 @@ define(["jquery", "trumbowyg"], function($) {
 	},
 	events: {
 	        onload : function(){
-	          $('#memo textarea').val(this.memo);
+	          //$('#memo textarea').val(this.memo);
 	          $('#memo textarea').trumbowyg();
+	          this.getMemo();
 	        },
 	        onchange : function(change){
 	          this.getMemo();
