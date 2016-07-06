@@ -17,7 +17,10 @@ define(["jquery"], function($) {
         var vue = this;
         //vue.users = [];
         //vue.users.length = 0
-        vue.users.splice(0,vue.users.length) //Empty array
+        //vue.users.splice(0,vue.users.length) //Empty array
+        while(vue.users.length > 0) {
+            vue.users.pop();
+        }
         //Filling user table
         this.db.users.allDocs({ include_docs: true }).then(function (result) {
           console.log("Nb user (+ _design docs) : "+result.rows.length);
