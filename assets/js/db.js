@@ -19,6 +19,8 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  onchange(info);
 				  db.tools.monitor(data,onchange);
 				}).on('error', function (err) {
+				  onchange(err);
+				  db.tools.monitor(data,onchange);
 				  console.log(err);//TODO check if needed to relaunch monitor
 				});
 			},
