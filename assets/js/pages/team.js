@@ -44,14 +44,43 @@ define(["jquery"], function($) {
     	  user.password = prompt('Choose a password :', vue.getRandomPass());
         this.db.users.put(user).then(function (response) {
           console.log(response);
-  	      //vue.getUsers(); //net necessayer (trigger by onchange)
+  	      //vue.getUsers(); //not necessayer (trigger by onchange)
         }).catch(function (err) {
           console.log(err);
           alert(err.message);
         });
     	},
-  	  addUser : function(event){},
-  	  delUser : function(event){}
+  	  addUser : function(event){
+  	    var vue = this;
+  	    
+        console.log('Adding user ...');
+        $('#add-user button').attr('disabled', 'disabled').text('Sending ...').blur();
+        $('#add-user input').attr('disabled', 'disabled');
+        var user = {
+          _id: 'org.couchdb.user:' + $('#add-user input#name').val(),
+          type: 'user',
+          name: $('#add-user input#name').val(),
+          password: $('#add-user input#password').val(),
+          roles: [
+             'equipier',
+          ],
+        };
+        
+        this.db.users.put(user).then(function (response) {
+          // handle response
+          console.log(response);
+  	      //vue.getUsers(); //not necessayer (trigger by onchange)
+          vue.updtUsersList();
+          $('#add-user input').val('').removeAttr('disabled');
+          $('#add-user button').removeAttr('disabled').text('Sauvegardé !').css('background-color', 'green');
+          window.setTimeout('$("#add-user button").text("Valider").css("background-color", "#9b4dca")', 1000);
+        }).catch(function (err) {
+          console.log(err);
+          alert(err.message);
+        });
+  	  },
+  	  delUser : function(event){},
+  	  updtUsersList: function(){},
     },
     events: {
   	  onload : function(){
