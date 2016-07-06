@@ -100,7 +100,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 		}
 		db.tools.setUrl();
 	}else{
-		db.tools.askCredential();
+		//db.tools.askCredential(); //ask in login
 	}
 	console.log(db.config);
 	return db;
