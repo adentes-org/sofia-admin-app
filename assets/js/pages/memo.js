@@ -60,7 +60,7 @@ define(["jquery", "trumbowyg"], function($) {
 	        onload : function(){
 	          //$('#memo textarea').val(this.memo);
 	          $('#memo textarea').trumbowyg({
-			//autogrow: true
+			autogrow: true
 		  });
 	          this.getMemo();
 	        },
