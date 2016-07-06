@@ -49,11 +49,13 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				db.config.dbname.fiche = prompt('DB Name :', db.config.dbname.fiche);//TODO not use prompt
 				urls = db.tools.getUrl();
 				db.users = new PouchDB(urls.user, {
-					auth : db.config.creds
+					auth : db.config.creds,
+					skip_setup: true
 				});
 				//*
 				db.fiches = new PouchDB(urls.fiche, {
-					auth : db.config.creds
+					auth : db.config.creds,
+					skip_setup: true
 				});
 				//*/
 			},
