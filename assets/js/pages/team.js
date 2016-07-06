@@ -48,7 +48,7 @@ define(["jquery"], function($) {
     	  user.password = prompt('Choose a password :', vue.getRandomPass());
         this.db.users.put(user).then(function (response) {
           console.log(response);
-  	      vue.getUsers();
+  	      //vue.getUsers(); //net necessayer (trigger by onchange)
         }).catch(function (err) {
           console.log(err);
           alert(err.message);
