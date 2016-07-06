@@ -4,7 +4,8 @@ define(["jquery"], function($) {
     data: function () {
   	return {users : []};
     },
-    template: '<h2>Team Management</h2>'+
+    template: '<button class="button-primary float-right" @click="updtUsersList">Update team list in App</button>'+
+              '<h2>Team Management</h2>'+
               '<table>'+
                 '<thead><tr><th>Name</th><th>Password</th><th>Roles</th><th>Action</th></tr></thead>'+
                 '<tbody>'+
@@ -94,7 +95,27 @@ define(["jquery"], function($) {
           });
         }
   	  },
-  	  updtUsersList: function(){},
+  	  updtUsersList: function(){
+    	  var vue = this;
+  	    console.log('Updating users list ...');
+        $('#teams>button').attr('disabled', 'disabled').text('Sending ...').blur();
+
+        var list = vue.users.map(function(user) {
+          return user.name;
+        });
+        console.log(list);
+        vue.db.fiches.get('_design/sofia-config').then(function(doc) {
+          doc.users = list;
+          return vue.db.fiches.put(doc);
+        }).then(function(result) {
+          // handle response
+          console.log(result);
+          $('#teams>button').removeAttr('disabled').text('Sauvegardé !').css('background-color', 'green');
+          window.setTimeout('$("#teams>button").text("Update team list in App").css("background-color", "#9b4dca")', 3000);
+        }).catch(function (err) {
+          console.log(err);
+});
+  	  },
     },
     events: {
   	  onload : function(){
