@@ -12,8 +12,8 @@ define(["jquery", "vue", "pouchdb","app/pages","app/db", "trumbowyg"], function(
 		S.app = new Vue({
 		  el: '.app',
 		  data: {
-		    view: 'configuration',
-			  db: db
+			view: 'memo',
+			db: db
 		  },
 		  components: pages.components,
 			events: {
