@@ -1,7 +1,5 @@
-//define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/team","app/pages/export","app/pages/conflict","app/pages/stat"], function($,Vue,memo,configuration,team,exp,conflict,stat) { //Load all page JS scripts
-define(["jquery","vue","app/pages/memo","app/pages/team"], function($,Vue,memo,team) { //Load all page JS scripts
+define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/team","app/pages/export","app/pages/conflict","app/pages/stat"], function($,Vue,memo,configuration,team,exp,conflict,stat) { //Load all page JS scripts
 	var pages =  {
-		home: memo,
 		menu: {
 			"configuration" : "Configuration",
 			"memo" : "Memo",
@@ -11,12 +9,12 @@ define(["jquery","vue","app/pages/memo","app/pages/team"], function($,Vue,memo,t
 			"stat": "Stats"
 		},
 		tabs : {
-			//configuration : configuration,
+			configuration : configuration,
 			memo : memo,
 			team : team,
-			//export : exp,
-			//conflict : conflict,
-			//stat : stat,
+			export : exp,
+			conflict : conflict,
+			stat : stat,
 		},
 		components : {}
 	}
