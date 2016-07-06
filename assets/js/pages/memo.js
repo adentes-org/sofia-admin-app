@@ -30,10 +30,11 @@ define(["jquery", "trumbowyg"], function($) {
 	        },
 	        updateMemo : function(){
 	          var obj = this;
-	          console.log(this,this.memo,this.rev);
+	          console.log("Vue obj : "+this.memo+" rev:"+this.rev);
 	          //var memo = this.memo;
 	          //var memo = $('#memo textarea').val(); this.memo = memo;
 	          var memo = $('#memo textarea').trumbowyg('html'); this.memo = memo;
+	          console.log("Vue obj : "+this.memo+" rev:"+this.rev);
 	
 	          var attachment = new Blob([memo], { type: 'text/html' });
 	
@@ -44,7 +45,8 @@ define(["jquery", "trumbowyg"], function($) {
 	            return obj.db.fiches.putAttachment('_design/sofia-config', 'memo.html',  doc._rev, attachment, 'text/html');
 	          }).then(function (result) {
 	            // handle result
-	            console.log(result);
+	            console.log("Result.rev : "+result.rev);
+	            console.log("Result : "+JSON.stringify(result));
 	            obj.rev = result.rev;
 	            $('#memo>button').removeAttr('disabled').text('Sauvegardé !').css('background-color', 'green');
 	            window.setTimeout('$("#memo>button").text("Valider").css("background-color", "#9b4dca")', 3000);
