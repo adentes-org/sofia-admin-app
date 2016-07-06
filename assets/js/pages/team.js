@@ -15,14 +15,7 @@ define(["jquery"], function($) {
     methods:{
       getUsers : function(){
         var vue = this;
-        vue.users = [];
-        //vue.users.length = 0
-        //vue.users.splice(0,vue.users.length) //Empty array
-        /*
-        while(vue.users.length > 0) {
-            vue.users.pop();
-        }
-        */
+        var users = []; //Empty array of users
         //Filling user table
         this.db.users.allDocs({ include_docs: true }).then(function (result) {
           console.log("Nb user (+ _design docs) : "+result.rows.length);
@@ -31,8 +24,9 @@ define(["jquery"], function($) {
             if (user.type != 'user')
               return; //Ex _design doc
             console.log(user);
-            vue.users.push(user);
+            users.push(user);
           });
+          vue.users=users; //Apply to vue el
         }).catch(function (err) {
           //TODO handle err
           console.log(err);
