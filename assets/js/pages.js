@@ -1,5 +1,5 @@
 //define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/team","app/pages/export","app/pages/conflict","app/pages/stat"], function($,Vue,memo,configuration,team,exp,conflict,stat) { //Load all page JS scripts
-define(["jquery","vue","app/pages/memo"], function($,Vue,memo) { //Load all page JS scripts
+define(["jquery","vue","app/pages/memo","app/pages/team"], function($,Vue,memo,team) { //Load all page JS scripts
 	var pages =  {
 		home: memo,
 		menu: {
@@ -13,7 +13,7 @@ define(["jquery","vue","app/pages/memo"], function($,Vue,memo) { //Load all page
 		tabs : {
 			//configuration : configuration,
 			memo : memo,
-			//team : team,
+			team : team,
 			//export : exp,
 			//conflict : conflict,
 			//stat : stat,
