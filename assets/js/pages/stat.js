@@ -142,7 +142,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
           }
   		  }
       },
-  		template: '<h2>Stat  <i style="font-size: 50%;"">(last update : {{last_update.toLocaleString()}})</i></h2>'+
+  		template: '<h2>Stat <i style="font-size: 50%;"">(last update : {{last_update.toLocaleString()}})</i></h2>'+
                 '<div id="global"><p>Nb fiche ouverte : {{stats.fiche.open}}</p><p>Nb fiche fermée : {{stats.fiche.close}}</p><br/></div>'+
                 '<div id="global-graph" style="text-align: center;">'+
                   '<div id="container-open" style="width: 400px; height: 400px; display: inline-block"></div>'+
@@ -150,11 +150,17 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 '</div>'+
                 '<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/>'+
                 '<div id="owners-graph">'+
-                  '<div v-for="(owner, config) in config.ownerToShow" id="container-owner-{{owner}}" style="width: 300px; height: 200px; display: inline-block"></div>'+
+                  '<div v-for="(owner, config) in config.ownerToShow" id="container-owner-{{owner}}" style="width: {{width}}; height: 200px; display: inline-block"></div>'+
                 '</div>'+
                 '<div id="affections-graph">'+
-                  '<div v-for="(owner, config) in config.ownerToShow" id="container-affections-{{owner}}" style="width: 300px; height: 200px; display: inline-block"></div>'+
+                  '<div v-for="(owner, config) in config.ownerToShow" id="container-affections-{{owner}}" style="width: {{width}}; height: 200px; display: inline-block"></div>'+
                 '</div>',
+      computed: {
+        width: function () {
+          console.log(this.config.ownerToShow,this.config.ownerToShow.length);
+          return (100/this.config.ownerToShow.length)+"%";
+        }
+      },
 			methods:{
         chart : function(id,data){
           if(typeof this.charts[id] === "undefined"){

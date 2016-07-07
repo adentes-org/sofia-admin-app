@@ -16,7 +16,7 @@ define([], function() {
           "little-care" : "#90ed7d",
           "bleeding" : "#f7a35c",
           "difficulty-breathing" : "#8085e9",
-          "malaise" : "#434348",
+          "malaise" : "#999",
           "trauma" : "#e4d354",
           "medical-consultation" : "#2b908f"
     }
