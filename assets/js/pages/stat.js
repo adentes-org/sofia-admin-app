@@ -148,20 +148,17 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   '<div id="container-open" style="width: 400px; height: 400px; display: inline-block"></div>'+
                   '<div id="container-affection" style="width: 720px; height: 400px; display: inline-block"></div>'+
                 '</div>'+
-                '<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/>'+
+                '<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
                 '<div id="owners-graph">'+
-                  '<div v-for="(owner, config) in config.ownerToShow" id="container-owner-{{owner}}" style="width: {{width}}; height: 200px; display: inline-block"></div>'+
-                '</div>'+
-                '<div id="affections-graph">'+
-                  '<div v-for="(owner, config) in config.ownerToShow" id="container-affections-{{owner}}" style="width: {{width}}; height: 200px; display: inline-block"></div>'+
+                  '<div v-for="(owner, config) in config.ownerToShow">'+
+                     '<div id="container-owner-{{owner}}" style="width: 25%; height: 200px; display: inline-block"></div>'+
+                     '<div id="container-affections-{{owner}}" style="width: 25%; height: 200px; display: inline-block"></div>'+
+                     '<div id="container-historic-{{owner}}" style="width: 50%; height: 200px; display: inline-block"></div>'+
+                  '</div>'+
                 '</div>',
       computed: {
-        width: function () {
-          console.log(this.config.ownerToShow,this.config.ownerToShow.length);
-          return (100/this.config.ownerToShow.length)+"%";
-        }
       },
-			methods:{
+      methods:{
         chart : function(id,data){
           if(typeof this.charts[id] === "undefined"){
             this.charts[id] = Highcharts.chart(id,data);
