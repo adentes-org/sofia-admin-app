@@ -14,7 +14,6 @@ define(["qrcode"], function(QRCode) {
                   '<button class="button-primary float-right" @click="resetAllUsersPassword" style="margin-right: 1rem;">Reset all password</button>'+
   	          '<h2>Export</h2>'+
                   '<div id="table">'+
-	               '<div class="row">'+ //TODO close and reopen % style.row_count
 	                  '<div v-for="(i, user) in users" class="column column-{{Math.floor(100/style.row_count)}}" >'+
 	                    '<div class="row">'+
 		                    '<div class="column column-{{style.column}}">'+
@@ -26,7 +25,6 @@ define(["qrcode"], function(QRCode) {
 	                            '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{user._id}}"></div>'+
 	                    '</div>'+
 			  '</div>'+
-		        '</div>'+
                   '</div>',
 	methods:{
 		getUsers : function(){
