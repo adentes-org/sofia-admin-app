@@ -3,20 +3,18 @@
 }
 
 #export p{
-    margin-bottom: 1rem;
-  }
-  #export p>span{
+	margin-bottom: 1rem;
+}
+#export p>span{
     float: right;
-  }
-  #export>#table>.column{
-   border: 1px solid #ccc;
-  }
-  #export>#table>.column-50{
-   padding: 0px 0px 0px 1rem;
-  }
-  #export>#table>.column .column-40{
-   padding:5px;
-  }
-  #export>#table>.column .column-25{
-   padding:2px;
-  }
+}
+#export>#table>.user{
+    border: 1px solid #ccc;
+    padding: 0px 0px 0px 1rem;
+}
+#export>#table>.user .column-40{
+    padding:5px;
+}
+#export>#table>.user .column-25{
+    padding:2px;
+}
