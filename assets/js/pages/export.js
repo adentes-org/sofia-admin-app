@@ -4,7 +4,7 @@ define(["qrcode"], function(QRCode) {
 	data: function () {
     		return {
     			users : [],
-    			style = {
+    			style : {
 			      row_count : 2,
 			      column : 60
 			}
