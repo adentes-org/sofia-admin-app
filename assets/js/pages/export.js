@@ -22,7 +22,7 @@ define(["jquery","qrcode"], function($,QRCode) {
 		                      '<p>Pseudo: <span>{{user.name}}</span></p>'+
 		                      '<p style="display:none">Password: <span></span></p>'+
 		                    '</div>'+
-	                            '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{i}}"></div>'+
+	                            '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{i}}"></div></div>'+
 	                    '</div>'+
 			  '</div>'+
                   '</div>',
