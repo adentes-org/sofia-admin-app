@@ -14,7 +14,7 @@ define(["jquery","qrcode"], function($,QRCode) {
                   '<button class="button-primary float-right" @click="resetAllUsersPassword" style="margin-right: 1rem;">Reset all password</button>'+
   	          '<h2>Export</h2>'+
                   '<div id="table">'+
-	                  '<div v-for="(i, user) in users" id="user-{{user._id}}" class="user" style="width : {{100/style.row_count}}%" >'+
+	                  '<div v-for="(i, user) in users" id="user-{{i}}" class="user" style="width : {{100/style.row_count}}%" >'+
 	                    '<div class="row">'+
 		                    '<div class="column column-{{style.column}}">'+
 		                      '<p>URL: <span>{{db.config.url}}</span></p>'+
@@ -22,7 +22,7 @@ define(["jquery","qrcode"], function($,QRCode) {
 		                      '<p>Pseudo: <span>{{user.name}}</span></p>'+
 		                      '<p style="display:none">Password: <span></span></p>'+
 		                    '</div>'+
-	                            '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{user._id}}"></div>'+
+	                            '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{i}}"></div>'+
 	                    '</div>'+
 			  '</div>'+
                   '</div>',
@@ -49,8 +49,8 @@ define(["jquery","qrcode"], function($,QRCode) {
 		generateUsersQRCode : function(){
 			var vue = this;
 		     	$(this.users).each(function (index, user) {
-		        	var el = $("user-"+user._id);
-		        	var elQRCode = $("qrcode-user-"+user._id);
+		        	var el = $("user-"+index);
+		        	var elQRCode = $("qrcode-user-"+index);
 		        	
 		        	var url = vue.db.config.url.replace("://","://"+user.name+"@") + "/" + vue.db.config.dbname.fiche;
 		                var size=elQRCode.parent().width()-10;
