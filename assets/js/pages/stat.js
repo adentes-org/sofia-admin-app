@@ -151,8 +151,8 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 '<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
                 '<div id="owners-graph">'+
                   '<div v-for="(owner, config) in config.ownerToShow">'+
-                     '<div id="container-owner-{{owner}}" style="width: 25%; height: 200px; display: inline-block"></div>'+
-                     '<div id="container-affections-{{owner}}" style="width: 25%; height: 200px; display: inline-block"></div>'+
+                     '<div id="container-owner-{{owner}}" style="width: 20%; height: 200px; display: inline-block"></div>'+
+                     '<div id="container-affections-{{owner}}" style="width: 30%; height: 200px; display: inline-block"></div>'+
                      '<div id="container-historic-{{owner}}" style="width: 50%; height: 200px; display: inline-block"></div>'+
                   '</div>'+
                 '</div>',
