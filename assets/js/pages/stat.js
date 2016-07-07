@@ -185,7 +185,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
             colorByPoint: true,
             data: Object.keys(stats.fiche.affection).map(function(name, index) {
               return {
-                name : name,
+                name : vue.config.affectionText[name] || name,
                 color: vue.config.affectionColor[name],
                 y : stats.fiche.affection[name].total - stats.fiche.affection[name].deleted
               }
@@ -224,7 +224,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   colorByPoint: true,
                   data: Object.keys(affection).map(function(name, index) {
                     return {
-                      name : name,
+                      name : vue.config.affectionText[name] || name,
                       color: vue.config.affectionColor[name],
                       y : affection[name].total - affection[name].deleted
                     }
