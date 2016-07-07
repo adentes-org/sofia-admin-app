@@ -19,6 +19,17 @@ define([], function() {
           "malaise" : "#999",
           "trauma" : "#e4d354",
           "medical-consultation" : "#2b908f"
-    }
+    },
+  	affectionText :  {
+  		  "undefined" : "Non définit",
+        "unconscious" : "Inconscient",
+        "cardio-respiratory-stop" : "Arret Cardio Respiratoire",
+        "little-care" : "Petit soin",
+        "bleeding" : "Hémorragie",
+        "difficulty-breathing" : "Difficulté respiratoire",
+        "malaise" : "Malaise",
+        "trauma" : "Traumatologie",
+        "medical-consultation" : "Consultation médicale",
+     }
   }
 });
