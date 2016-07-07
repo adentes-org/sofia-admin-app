@@ -1,4 +1,4 @@
-define(["qrcode"], function(QRCode) {
+define(["jquery","qrcode"], function($,QRCode) {
   return {
   	props: ['db'],
 	data: function () {
@@ -14,7 +14,7 @@ define(["qrcode"], function(QRCode) {
                   '<button class="button-primary float-right" @click="resetAllUsersPassword" style="margin-right: 1rem;">Reset all password</button>'+
   	          '<h2>Export</h2>'+
                   '<div id="table">'+
-	                  '<div v-for="(i, user) in users" class="user" style="width : {{100/style.row_count}}%" >'+
+	                  '<div v-for="(i, user) in users" id="user-{{user._id}}" class="user" style="width : {{100/style.row_count}}%" >'+
 	                    '<div class="row">'+
 		                    '<div class="column column-{{style.column}}">'+
 		                      '<p>URL: <span>{{db.config.url}}</span></p>'+
@@ -47,8 +47,25 @@ define(["qrcode"], function(QRCode) {
 			});	
 		},
 		generateUsersQRCode : function(){
-			//TODO
-			
+			var vue = this;
+		     	$(this.users).each(function (index, user) {
+		        	var el = $("user-"+user._id);
+		        	var elQRCode = $("qrcode-user-"+user._id);
+		        	
+		        	var url = vue.db.config.url.replace("://","://"+user.name+"@") + "/" + vue.db.config.dbname.fiche;
+		                var size=elQRCode.parent().width()-10;
+		                
+			        if(el.find(".column:first p:last").is(":visible")){
+			            //console.log("We have a password : " +  el.find(".column:first p:last span").text())
+			            url = url.replace("@", ":"+el.find(".column:first p:last span").text()+"@")
+			        }
+			        elQRCode.html(""); //Remove old QRCode
+			        new QRCode(elQRCode[0], {
+			            text : url,
+			            width: size,
+			            height: size
+			        });
+		     	});
 		},
 		resetAllUsersPassword : function(){
 			//TODO
