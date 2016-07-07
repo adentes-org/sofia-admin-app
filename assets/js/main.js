@@ -11,8 +11,8 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 		$("body>.app").html(base);
 
 		S.app = new Vue({
-			  el: '.app',
-			  data: {
+			el: '.app',
+			data: {
 				view: 'configuration',
 				config: config,
 				db: db
