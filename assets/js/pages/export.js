@@ -60,7 +60,7 @@ define(["jquery","qrcode"], function($,QRCode) {
 			            url = url.replace("@", ":"+el.find(".column:first p:last span").text()+"@")
 			        }
 			        elQRCode.html(""); //Remove old QRCode
-			        new QRCode(elQRCode[0], {
+			        new QRCode("qrcode-user-"+index, {
 			            text : url,
 			            width: size,
 			            height: size
