@@ -229,7 +229,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                     }
                   })
                 });
-		var specificHistOptions = this.generateSpecificOptionHist(" ",{
+		var specificHistOptions = vue.generateSpecificOptionHist(" ",{
 	                name: 'open',
 	                data: [{
 	                	x:(new Date()).getTime(),
