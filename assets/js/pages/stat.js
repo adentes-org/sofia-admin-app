@@ -136,8 +136,8 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
           }
   		  }
       },
-  		template: '<button class="button-primary float-right" @click="forceUpdt">Force update</button>'+
-  		'<h2>Stat <i style="font-size: 50%;"">(last update : {{last_update.toLocaleString()}})</i></h2>'+
+  		template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
+  		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
                 '<div id="global"><p>Nb fiche ouverte : {{stats.fiche.open}}</p><p>Nb fiche fermée : {{stats.fiche.close}}</p><br/></div>'+
                 '<div id="global-graph" style="text-align: center;">'+
                   '<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
