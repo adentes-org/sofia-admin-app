@@ -139,8 +139,8 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
   		template: '<h2>Stat <i style="font-size: 50%;"">(last update : {{last_update.toLocaleString()}})</i></h2>'+
                 '<div id="global"><p>Nb fiche ouverte : {{stats.fiche.open}}</p><p>Nb fiche fermée : {{stats.fiche.close}}</p><br/></div>'+
                 '<div id="global-graph" style="text-align: center;">'+
-                  '<div id="container-open" style="width: 50%; height: 400px; display: inline-block"></div>'+
-                  '<div id="container-affection" style="width: 50%; height: 400px; display: inline-block"></div>'+
+                  '<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
+                  '<div id="container-affection" style="width: 65%; height: 400px; display: inline-block"></div>'+
                 '</div>'+
                 '<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
                 '<div id="owners-graph">'+
