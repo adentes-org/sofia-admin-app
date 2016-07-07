@@ -204,12 +204,12 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
           //this.charts['container-historic'].series[0].addPoint(point, true, this.charts['container-historic'].series[0].data.length>50); //Over 50 points we shift oldest
 
 	   $.each(this.config.ownerToShow, function (id, params) {
-            		var  open = 0; //Set to zero by default
+            	var  open = 0; //Set to zero by default
                 var  affection = {}; //Set to empty by default
-            		if(typeof stats.owner[id] !== "undefined"){
-            			open = stats.owner[id].open;
+            	if(typeof stats.owner[id] !== "undefined"){
+            		open = stats.owner[id].open;
               		affection = stats.owner[id].affection;
-            		}
+            	}
 
                 var specificGaugeOptions = vue.generateSpecificOptionGauge(id,params.max, {
                   name: 'Open',
@@ -229,9 +229,17 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                     }
                   })
                 });
+		var specificHistOptions = this.generateSpecificOptionHist(" ",{
+	                name: 'open',
+	                data: [{
+	                	x:(new Date()).getTime(),
+	                	y:open
+	                }]
+	         });
 
                 vue.chart('container-owner-'+id,Highcharts.merge(vue.options.gaugeOptions,specificGaugeOptions))
                 vue.chart('container-affections-'+id,Highcharts.merge(vue.options.pieOptions,specificPieOptions))
+                vue.chart('container-historic-'+id,Highcharts.merge(vue.options.histOptions,specificHistOptions))
           })
 
         },
