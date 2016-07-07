@@ -13,9 +13,6 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
               credits: {
                   enabled: false
               },
-              title: {
-                text: 'Live open fiches'
-              },
               xAxis: {
                   type: 'datetime',
                   tickPixelInterval: 150
@@ -44,10 +41,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
               exporting: {
                   enabled: false
               },
-              series: [{
-                name: 'Total open',
-                data: []
-              }]
+              series: []
             },
             pieOptions : {
               chart: {
@@ -164,7 +158,14 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
             this.charts[id] = Highcharts.chart(id,data);
           }else{
             //console.log(id,this.charts[id],this.charts[id].series[0])
-            this.charts[id].series[0].setData(data.series[0].data)
+            if(data.series[0].data.length === 1 && typeof data.series[0].data[0].x !== "undefined"){ //This a uniq point with x position (so spline point)
+            	var point = [data.series[0].data[0].x,data.series[0].data[0].y];
+            	this.charts[id].series[0].addPoint(point, true, this.charts[id].series[0].data.length>50); //Over 50 points we shift oldest
+            }else{
+            	this.charts[id].series[0].setData(data.series[0].data)
+            }
+            
+            
           }
         },
         updateCharts : function(){
@@ -189,14 +190,20 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
               }
             })
           });
+	  var specificHistOptions = this.generateSpecificOptionHist("Live open fiches",{
+                name: 'Total open',
+                data: [{
+                	x:(new Date()).getTime(),
+                	y:stats.fiche.open
+                }]
+           });
+	  
           this.chart('container-open',Highcharts.merge(this.options.gaugeOptions,specificGaugeOptions))
           this.chart('container-affection',Highcharts.merge(this.options.pieOptions,specificPieOptions))
-          //console.log(this.charts['container-historic'].series[0],this.charts['container-historic'].series[0].addPoint)
-          var point = [(new Date()).getTime(), stats.fiche.open];
-          //console.log(stats.fiche.open,this.charts['container-historic'].series[0].data,point);
-          this.charts['container-historic'].series[0].addPoint(point, true, this.charts['container-historic'].series[0].data.length>50); //Over 50 points we shift oldest
+          this.chart('container-historic',Highcharts.merge(this.options.histOptions,specificHistOptions))
+          //this.charts['container-historic'].series[0].addPoint(point, true, this.charts['container-historic'].series[0].data.length>50); //Over 50 points we shift oldest
 
-	        $.each(this.config.ownerToShow, function (id, params) {
+	   $.each(this.config.ownerToShow, function (id, params) {
             		var  open = 0; //Set to zero by default
                 var  affection = {}; //Set to empty by default
             		if(typeof stats.owner[id] !== "undefined"){
@@ -227,6 +234,14 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 vue.chart('container-affections-'+id,Highcharts.merge(vue.options.pieOptions,specificPieOptions))
           })
 
+        },
+        generateSpecificOptionHist : function(title,serie){
+            return {
+            	title: {
+          		text: title
+          	},
+                series: [serie]
+            }
         },
         generateSpecificOptionPie : function(title,serie){
           return {
@@ -362,7 +377,6 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   useUTC: false
               }
           });
-          this.chart('container-historic',this.options.histOptions);
           this.getStats().then(this.updateCharts);
     	  },
     	  onchange : function(change){
