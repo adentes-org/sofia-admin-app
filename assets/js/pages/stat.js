@@ -181,6 +181,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
             data: Object.keys(stats.fiche.affection).map(function(name, index) {
               return {
                 name : name,
+                color: vue.config.affectionColor[name],
                 y : stats.fiche.affection[name].total - stats.fiche.affection[name].deleted
               }
             })
@@ -213,6 +214,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   data: Object.keys(affection).map(function(name, index) {
                     return {
                       name : name,
+                      color: vue.config.affectionColor[name],
                       y : affection[name].total - affection[name].deleted
                     }
                   })
@@ -231,15 +233,6 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} fiches</b>'
                 },
-                /*
-                plotOptions: {
-                    pie: {
-                        dataLabels: {
-                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                        }
-                    }
-                },
-                */
                 series: [serie]
           }
         },
