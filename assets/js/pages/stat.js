@@ -179,7 +179,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   valueSuffix: ' fiche(s)'
               }
           });
-          var specificPieOptions = this.generateSpecificOptionPie("Affections primaires totales", {
+          var specificPieOptions = this.generateSpecificOptionPie("Affections primaires totales",true, {
             name: 'Affections',
             colorByPoint: true,
             data: Object.keys(stats.fiche.affection).map(function(name, index) {
@@ -218,7 +218,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                     valueSuffix: ' fiche(s)'
                   }
                 });
-                var specificPieOptions = vue.generateSpecificOptionPie("Affections", {
+                var specificPieOptions = vue.generateSpecificOptionPie("Affections",false, {
                   name: 'Affections',
                   colorByPoint: true,
                   data: Object.keys(affection).map(function(name, index) {
@@ -251,11 +251,20 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 series: [serie]
             }
         },
-        generateSpecificOptionPie : function(title,serie){
+        generateSpecificOptionPie : function(title,displayLegends,serie){
           return {
-          			title: {
-          					text: title
-          			},
+                title: {
+                  text: title
+                },
+                legend: {
+                  enabled: displayLegends
+                },            
+                plotOptions: {
+	                pie: {
+	                    dataLabels: {
+	                        enabled: displayLegends
+	                    }
+                },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} fiches</b>'
                 },
