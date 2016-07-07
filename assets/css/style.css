@@ -9,6 +9,7 @@
     float: right;
 }
 #export>#table>.user{
+	display: inline-block;
     border: 1px solid #ccc;
     padding: 0px 0px 0px 1rem;
 }
