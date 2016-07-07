@@ -173,8 +173,8 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
           var vue = this;
           var stats = vue.stats
 
-          var specificGaugeOptions = this.generateSpecificOptionGauge("Total open",this.config.global.max_open, {
-              name: 'Open',
+          var specificGaugeOptions = this.generateSpecificOptionGauge("Fiches ouvertes totales",this.config.global.max_open, {
+              name: 'Ouvertes',
               data: [stats.fiche.open],
               tooltip: {
                   valueSuffix: ' fiche(s)'
@@ -191,8 +191,8 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
               }
             })
           });
-	  var specificHistOptions = this.generateSpecificOptionHist("Live open fiches",{
-                name: 'Total open',
+	  var specificHistOptions = this.generateSpecificOptionHist("Suivi temporel fiches ouvertes",{
+                name: 'Fiches ouvertes',
                 data: [{
                 	x:(new Date()).getTime(),
                 	y:stats.fiche.open
@@ -213,7 +213,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
             	}
 
                 var specificGaugeOptions = vue.generateSpecificOptionGauge(id,params.max, {
-                  name: 'Open',
+                  name: 'Ouvertes par '+id,
                   data: [open],
                   tooltip: {
                     valueSuffix: ' fiche(s)'
@@ -231,7 +231,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   })
                 });
 		var specificHistOptions = vue.generateSpecificOptionHist(" ",{
-	                name: 'open',
+	                name: 'Ouvertes par '+id,
 	                data: [{
 	                	x:(new Date()).getTime(),
 	                	y:open
