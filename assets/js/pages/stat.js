@@ -264,6 +264,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
 	                    dataLabels: {
 	                        enabled: displayLegends
 	                    }
+	                }
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} fiches</b>'
