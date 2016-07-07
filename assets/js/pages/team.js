@@ -1,4 +1,4 @@
-define(["jquery"], function($) {
+define(["jquery","app/tool"], function($,tool) {
   return {
     props: ['db'],
     data: function () {
@@ -24,7 +24,7 @@ define(["jquery"], function($) {
             var user = value.doc;
             if (user.type != 'user')
               return; //Ex _design doc
-            console.log(user);
+            //console.log(user);
             users.push(user);
           });
           vue.users=users; //Apply to vue el
@@ -36,16 +36,13 @@ define(["jquery"], function($) {
           console.log(err);
         });
       },
-    	getRandomPass: function(event){
-    	  return Math.random().toString(36).substr(2, 5)
-    	},
     	resetPass: function(event){
     	  var vue = this;
     	  var el = $(event.target).parent().parent(); //Get tr el
         var user = this.users[el.attr('data-i')];
-        
+
     	  console.log('Reseting user pass ...', user);
-    	  user.password = prompt('Choose a password :', vue.getRandomPass());
+    	  user.password = prompt('Choose a password :', tool.getRandomPass());
         this.db.users.put(user).then(function (response) {
           console.log(response);
   	      //vue.getUsers(); //not necessayer (trigger by onchange)
@@ -56,7 +53,7 @@ define(["jquery"], function($) {
     	},
   	  addUser : function(event){
   	    var vue = this;
-  	    
+
         console.log('Adding user ...');
         $('#add-user button').attr('disabled', 'disabled').text('Sending ...').blur();
         $('#add-user input').attr('disabled', 'disabled');
@@ -69,7 +66,7 @@ define(["jquery"], function($) {
              'equipier',
           ],
         };
-        
+
         this.db.users.put(user).then(function (response) {
           // handle response
           console.log(response);
@@ -89,7 +86,7 @@ define(["jquery"], function($) {
     	  var el = $(event.target).parent().parent(); //Get tr el
         var user = this.users[el.attr('data-i')];
   	    console.log('Deleting user ...', user);
-        
+
         if (confirm('Etes vous sur de supprimer : ' + user.name + ' ?')) {
           this.db.users.remove(user._id, user._rev).then(function (response) {
             vue.needUpdateUserList = true;

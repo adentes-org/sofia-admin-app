@@ -1,14 +1,15 @@
-define(["jquery","qrcode"], function($,QRCode) {
+define(["jquery","qrcode","app/tool"], function($,QRCode,tool) {
   return {
   	props: ['db'],
 	data: function () {
     		return {
     			users : [],
+          passwords: {},
     			style : {
 			      row_count : 2,
 			      column : 60
-			}
-  		}
+          }
+        }
   	},
   	template: '<button class="button-primary float-right" @click="generateUsersQRCode">Generate QR-Codes</button>'+
                   '<button class="button-primary float-right" @click="resetAllUsersPassword" style="margin-right: 1rem;">Reset all password</button>'+
@@ -20,14 +21,14 @@ define(["jquery","qrcode"], function($,QRCode) {
 		                      '<p>URL: <span>{{db.config.url}}</span></p>'+
 		                      '<p>Database Name: <span>{{db.config.dbname.fiche}}</span></p>'+
 		                      '<p>Pseudo: <span>{{user.name}}</span></p>'+
-		                      '<p style="display:none">Password: <span></span></p>'+
+		                      '<p v-show="passwords[user._id]">Password: <span>{{passwords[user._id]}}</span></p>'+
 		                    '</div>'+
-	                            '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{i}}"></div></div>'+
+	                      '<div class="column column-{{100-style.column}}"><div id="qrcode-user-{{i}}"></div></div>'+
 	                    '</div>'+
-			  '</div>'+
+			              '</div>'+
                   '</div>',
 	methods:{
-		getUsers : function(){
+		getUsers : tool.debounce(function(){
 		        var vue = this;
 		        var users = []; //Empty array of users
 		        //Filling user table
@@ -37,46 +38,64 @@ define(["jquery","qrcode"], function($,QRCode) {
 		            var user = value.doc;
 		            if (user.type != 'user')
 		              return; //Ex _design doc
-		            console.log(user);
+		            //console.log(user);
 		            users.push(user);
 		          });
 		          vue.users=users; //Apply to vue el
+              vue.generateUsersQRCode()
 		        }).catch(function (err) {
 		          //TODO handle err
 		          console.log(err);
-			});	
-		},
-		generateUsersQRCode : function(){
-			var vue = this;
+			      });
+		}, 250),
+		generateUsersQRCode : tool.debounce(function(){
+			    var vue = this;
 		     	$(this.users).each(function (index, user) {
-		        	var el = $("user-"+index);
-		        	var elQRCode = $("qrcode-user-"+index);
-		        	
+		        	var el = $("#user-"+index);
+		        	var elQRCode = $("#qrcode-user-"+index);
+
 		        	var url = vue.db.config.url.replace("://","://"+user.name+"@") + "/" + vue.db.config.dbname.fiche;
-		                var size=elQRCode.parent().width()-10;
-		                
-			        if(el.find(".column:first p:last").is(":visible")){
-			            //console.log("We have a password : " +  el.find(".column:first p:last span").text())
-			            url = url.replace("@", ":"+el.find(".column:first p:last span").text()+"@")
-			        }
+		          var size=elQRCode.parent().width()-10;
+              if(vue.passwords[user._id]){
+                url = url.replace("@", ":"+el.find(".column:first p:last span").text()+"@")
+              }
+              console.log(size,url);
+
 			        elQRCode.html(""); //Remove old QRCode
 			        new QRCode("qrcode-user-"+index, {
 			            text : url,
 			            width: size,
 			            height: size
 			        });
+
 		     	});
-		},
+		}, 250),
 		resetAllUsersPassword : function(){
-			//TODO
+			    var vue = this;
+          var passwords = {};
+          var users = [];
+		     	$(this.users).each(function (index, user) {
+              	  console.log('Reseting user pass ...', user);
+              	  user.password = tool.getRandomPass();
+                  passwords[user._id] = user.password;
+                  users.push(user);
+          });
+          vue.passwords = passwords;
+          vue.db.users.bulkDocs(users).then(function (response) {
+            console.log(response);
+            //vue.getUsers(); //not necessayer (trigger by onchange)
+          }).catch(function (err) {
+            console.log(err);
+            alert(err.message);
+          });
 		}
 	},
 	events: {
 	  	  onload : function(){
-	  	    this.getUsers().then(this.generateUsersQRCode);
+	  	    this.getUsers();
 	  	  },
 	  	  onchange : function(change){
-	  	    this.getUsers().then(this.generateUsersQRCode);
+	  	    this.getUsers();
 	  	  }
 	}
   };

@@ -9,7 +9,7 @@
     float: right;
 }
 #export>#table>.user{
-	display: inline-block;
+	  display: inline-block;
     border: 1px solid #ccc;
     padding: 0px 0px 0px 1rem;
 }
@@ -18,4 +18,16 @@
 }
 #export>#table>.user .column-25{
     padding:2px;
+}
+
+@media print {
+   .app>:not(.page), #export>button {
+     display:none;
+   }
+   #export img{
+     width: 75%;
+   }
+   #export>#table{
+     font-size: 65%;
+   }
 }
