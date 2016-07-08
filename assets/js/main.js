@@ -4,6 +4,9 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 		pages : pages,
 		statOnly : window.location.hash.slice(1) === "stat" //Add #stat to only log for stat
 	};
+	if(S.statOnly){
+		S.pages.menu = {"stat": S.pages.menu["stat"]}; // Only stat in menu
+	};
 	window.S = S;
 	$(function(){
 		
