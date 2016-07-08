@@ -142,7 +142,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           }
   		  }
       },
-  		template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
+      template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
   		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
                 '<button class="button-primary float-right" @click="saveConfig">saveConfig</button>'+
                 '<div id="config"><p>Nb max global : <input v-model="config.global.max_open" /></p><p>'+
@@ -368,14 +368,14 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               }
             //*/
             //*
-              console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),SON.stringify(vue.config.global),JSON.stringify(doc.config.global))
+              //console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),SON.stringify(vue.config.global),JSON.stringify(doc.config.global))
               if(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global)){ //We have update we reset
                 delete vue.charts['container-open'];
                 //delete vue.charts['container-affection']; //Don't depend on global (yet)
                 //delete vue.charts['container-historic']; //Don't depend on global (yet)
               }
 
-              console.log(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow),SON.stringify(vue.config.ownerToShow),JSON.stringify(doc.config.ownerToShow))
+              //console.log(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow),SON.stringify(vue.config.ownerToShow),JSON.stringify(doc.config.ownerToShow))
               if(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow)){ //We have update we reset
 	          $.each(vue.charts, function (index, config) { //only reset owner grpah
 	          	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
