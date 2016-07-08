@@ -294,22 +294,22 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                     title: {
                         text: 'open'
                     },
-          					plotBands: [{
-          							from: 0,
-          							to: max*0.6,
-          							color: '#55BF3B' // green
-          					}, {
-          							from: max*0.6,
-          							to: max*0.8,
-          							color: '#DDDF0D' // yellow
-          					}, {
-          							from: max*0.80,
-          							to: max,
-          							color: '#DF5353' // red
-          					}]
-          			},
-          			series: [serie]
-          	}
+          	    plotBands: [{
+          		from: 0,
+          	 	to: max*0.6,
+          		color: '#55BF3B' // green
+          	    }, {
+          	  	from: max*0.6,
+          		to: max*0.8,
+          		color: '#DDDF0D' // yellow
+          	    }, {
+          		from: max*0.80,
+          		to: max,
+          		color: '#DF5353' // red
+          	    }]
+          	},
+          	series: [serie]
+            }
         },
         forceUpdt : function(){
         	this.getStats();
@@ -368,11 +368,14 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               }
             //*/
             //*
+              console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),SON.stringify(vue.config.global),JSON.stringify(doc.config.global))
               if(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global)){ //We have update we reset
                 delete vue.charts['container-open'];
                 //delete vue.charts['container-affection']; //Don't depend on global (yet)
                 //delete vue.charts['container-historic']; //Don't depend on global (yet)
               }
+
+              console.log(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow),SON.stringify(vue.config.ownerToShow),JSON.stringify(doc.config.ownerToShow))
               if(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow)){ //We have update we reset
 	          $.each(vue.charts, function (index, config) { //only reset owner grpah
 	          	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
