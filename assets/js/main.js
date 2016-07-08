@@ -41,6 +41,7 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 			}
 		})
 		//*
+		S.app.config.statOnly = S.statOnly //Add to config
 		db.tools.login({isStatOnly : S.statOnly}).then(function(info){
 			console.log("We are in !",info)
 			if(!S.statOnly){ // We need to monitor users db if full admin
