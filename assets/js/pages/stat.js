@@ -310,6 +310,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
         	this.getStats();
         },
         addToOwnerToShow : function(event){
+          var vue = this;
           var user = $(event.target).text();
           var ownerToShow = $.extend({},this.config.ownerToShow);
 
@@ -322,7 +323,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           this.$set("config.ownerToShow", ownerToShow);
           
           //this.charts = {}; //Reset //Too desctructive
-          $.each(this.charts, function (index, config) { //only reset owner grpah
+          $.each(vue.charts, function (index, config) { //only reset owner grpah
           	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
           		//We are in a owner index;
           		/*
@@ -331,7 +332,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 	          		delete this.charts[index]; //remove graph
           		}
           		*/
-	          	delete this.charts[index]; //Remove all owner graph
+	          	delete vue.charts[index]; //Remove all owner graph
           	}
           })
           this.getStats();
