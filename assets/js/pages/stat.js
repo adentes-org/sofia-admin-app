@@ -304,13 +304,6 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           					}]
           			},
           			series: [serie]
-                /* serie = {
-          					name: 'Open',
-          					data: [stats.fiche.open],
-          					tooltip: {
-          							valueSuffix: ' fiche(s)'
-          					}
-          			}*/
           	}
         },
         forceUpdt : function(){
