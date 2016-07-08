@@ -72,8 +72,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   }
               },
               series: []
-            },
-            gaugeOptions :{
+           },
+           gaugeOptions :{
               chart: {
                  type: 'gauge',
                  plotBackgroundColor: null,
@@ -119,6 +119,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
              yAxis: {
                  min: 0,
                  max: 200,
+                 allowDecimals : false,
                  minorTickInterval: 'auto',
                  minorTickWidth: 1,
                  minorTickLength: 10,
@@ -361,12 +362,12 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             // handle result
             console.log("Get config",doc.config)
             if(typeof doc.config !== "undefined"){ //TODO checkuo config format
-            //*
+            /* old methods
               if(JSON.stringify({ global : vue.config.global,  ownerToShow : vue.config.ownerToShow }) !== JSON.stringify(doc.config)){ //We have update we reset
                 vue.charts = {};
               }
             //*/
-            /*
+            //*
               if(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global)){ //We have update we reset
                 delete vue.charts['container-open'];
                 //delete vue.charts['container-affection']; //Don't depend on global (yet)
@@ -380,7 +381,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 	          	}
 	          })
               }
-              */
+              //*/
               vue.$set("config", $.extend({},vue.config,doc.config)); //Apply config
             }
             if(typeof doc.users !== "undefined"){
