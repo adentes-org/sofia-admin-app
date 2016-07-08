@@ -3,7 +3,6 @@ var objectDiff = typeof exports != 'undefined' ? exports : {};
 /**
  * @param {Object} a
  * @param {Object} b
- * @nosideeffects
  * @return {Object}
  */
 objectDiff.diff = function diff(a, b) {
@@ -15,25 +14,33 @@ objectDiff.diff = function diff(a, b) {
 		}
 	}
 
-	var result = {};
+	var value = {};
+	var equal = true;
 
 	for (var key in a) {
 		if (key in b) {
 			if (a[key] === b[key]) {
-				result[key] = {
-					changed: 'equals',
+				value[key] = {
+					changed: 'equal',
 					value: a[key]
 				}
 			} else {
 				var typeA = typeof a[key];
 				var typeB = typeof b[key];
-				if ((typeA == 'object' || typeA == 'function') && (typeB == 'object' || typeB == 'function')) {
-					result[key] = {
-						changed: 'object change',
-						diff: diff(a[key], b[key])
+				if (a[key] && b[key] && (typeA == 'object' || typeA == 'function') && (typeB == 'object' || typeB == 'function')) {
+					var valueDiff = diff(a[key], b[key]);
+					if (valueDiff.changed == 'equal') {
+						value[key] = {
+							changed: 'equal',
+							value: a[key]
+						}
+					} else {
+						equal = false;
+						value[key] = valueDiff;
 					}
 				} else {
-					result[key] = {
+					equal = false;
+					value[key] = {
 						changed: 'primitive change',
 						removed: a[key],
 						added: b[key]
@@ -41,7 +48,8 @@ objectDiff.diff = function diff(a, b) {
 				}
 			}
 		} else {
-			result[key] = {
+			equal = false;
+			value[key] = {
 				changed: 'removed',
 				value: a[key]
 			}
@@ -50,21 +58,31 @@ objectDiff.diff = function diff(a, b) {
 
 	for (key in b) {
 		if (!(key in a)) {
-			result[key] = {
+			equal = false;
+			value[key] = {
 				changed: 'added',
 				value: b[key]
 			}
 		}
 	}
 
-	return result;
+	if (equal) {
+		return {
+			changed: 'equal',
+			value: a
+		}
+	} else {
+		return {
+			changed: 'object change',
+			value: value
+		}
+	}
 };
 
 
 /**
  * @param {Object} a
  * @param {Object} b
- * @nosideeffects
  * @return {Object}
  */
 objectDiff.diffOwnProperties = function diffOwnProperties(a, b) {
@@ -76,27 +94,35 @@ objectDiff.diffOwnProperties = function diffOwnProperties(a, b) {
 		}
 	}
 
-	var result = {};
+	var diff = {};
+	var equal = true;
 	var keys = Object.keys(a);
 
 	for (var i = 0, length = keys.length; i < length; i++) {
 		var key = keys[i];
 		if (b.hasOwnProperty(key)) {
 			if (a[key] === b[key]) {
-				result[key] = {
-					changed: 'equals',
+				diff[key] = {
+					changed: 'equal',
 					value: a[key]
 				}
 			} else {
 				var typeA = typeof a[key];
 				var typeB = typeof b[key];
-				if ((typeA == 'object' || typeA == 'function') && (typeB == 'object' || typeB == 'function')) {
-					result[key] = {
-						changed: 'object change',
-						diff: diffOwnProperties(a[key], b[key])
+				if (a[key] && b[key] && (typeA == 'object' || typeA == 'function') && (typeB == 'object' || typeB == 'function')) {
+					var valueDiff = diffOwnProperties(a[key], b[key]);
+					if (valueDiff.changed == 'equal') {
+						diff[key] = {
+							changed: 'equal',
+							value: a[key]
+						}
+					} else {
+						equal = false;
+						diff[key] = valueDiff;
 					}
 				} else {
-					result[key] = {
+					equal = false;
+					diff[key] = {
 						changed: 'primitive change',
 						removed: a[key],
 						added: b[key]
@@ -104,7 +130,8 @@ objectDiff.diffOwnProperties = function diffOwnProperties(a, b) {
 				}
 			}
 		} else {
-			result[key] = {
+			equal = false;
+			diff[key] = {
 				changed: 'removed',
 				value: a[key]
 			}
@@ -116,93 +143,79 @@ objectDiff.diffOwnProperties = function diffOwnProperties(a, b) {
 	for (i = 0, length = keys.length; i < length; i++) {
 		key = keys[i];
 		if (!a.hasOwnProperty(key)) {
-			result[key] = {
+			equal = false;
+			diff[key] = {
 				changed: 'added',
 				value: b[key]
 			}
 		}
 	}
 
-	return result;
+	if (equal) {
+		return {
+			value: a,
+			changed: 'equal'
+		}
+	} else {
+		return {
+			changed: 'object change',
+			value: diff
+		}
+	}
 };
 
 
 (function() {
 
 	/**
-	 * @param {Object} diff
+	 * @param {Object} changes
 	 * @return {string}
 	 */
-	objectDiff.convertToXMLString = function convertToXMLString(diff) {
-		var output = '';
+	objectDiff.convertToXMLString = function convertToXMLString(changes) {
 		var properties = [];
+
+		var diff = changes.value;
+		if (changes.changed == 'equal') {
+			return inspect(diff);
+		}
 
 		for (var key in diff) {
 			var changed = diff[key].changed;
 			switch (changed) {
-				case 'equals':
+				case 'equal':
 					properties.push(stringifyObjectKey(escapeHTML(key)) + '<span>: </span>' + inspect(diff[key].value));
 					break;
 
 				case 'removed':
-					properties.push('<del>' + stringifyObjectKey(escapeHTML(key)) + '<span>: </span>' + inspect(diff[key].value) + '</del>');
+					properties.push('<del class="diff">' + stringifyObjectKey(escapeHTML(key)) + '<span>: </span>' + inspect(diff[key].value) + '</del>');
 					break;
 
 				case 'added':
-					properties.push('<ins>' + stringifyObjectKey(escapeHTML(key)) + '<span>: </span>' + inspect(diff[key].value) + '</ins>');
+					properties.push('<ins class="diff">' + stringifyObjectKey(escapeHTML(key)) + '<span>: </span>' + inspect(diff[key].value) + '</ins>');
 					break;
 
 				case 'primitive change':
 					var prefix = stringifyObjectKey(escapeHTML(key)) + '<span>: </span>';
 					properties.push(
-						'<del class="key">' + prefix + escapeHTML(inspect(diff[key].removed)) + '</del><span>,</span>\n' +
-						'<ins class="key">' + prefix + escapeHTML(inspect(diff[key].added)) + '</ins>');
+						'<del class="diff diff-key">' + prefix + inspect(diff[key].removed) + '</del><span>,</span>\n' +
+						'<ins class="diff diff-key">' + prefix + inspect(diff[key].added) + '</ins>');
 					break;
 
 				case 'object change':
-					properties.push(stringifyObjectKey(key) + '<span>: </span>' + convertToXMLString(diff[key].diff));
+					properties.push(stringifyObjectKey(key) + '<span>: </span>' + convertToXMLString(diff[key]));
 					break;
 			}
 		}
 
-		return '<span>{</span>\n<div class="level">' + properties.join('<span>,</span>\n') + '\n</div><span>}</span>';
+		return '<span>{</span>\n<div class="diff-level">' + properties.join('<span>,</span>\n') + '\n</div><span>}</span>';
 	};
-
-
-	var _repeatCache = {};
-	/**
-	 * repeatString("\t", 2) ==> "\t\t"
-	 * @param {String} string
-	 * @param {Number} times
-	 */
-	function repeatString(string, times) {
-		if (times == 1) {
-			return string;
-		} else if (times < 1) {
-			return '';
-		}
-
-		var key = string + times;
-
-		if (_repeatCache[key]) {
-			return _repeatCache[key];
-		} else {
-			var result = string;
-			for (var i = times; --i;) {
-				result += string;
-			}
-			_repeatCache[key] = result;
-		}
-
-		return result;
-	}
 
 	/**
 	 * @param {string} key
 	 * @return {string}
 	 */
 	function stringifyObjectKey(key) {
-		return /^[a-z_$][a-z0-9_$]*$/i.test(key) ?
+		return /^[a-z0-9_$]*$/i.test(key) ?
 			key :
 			JSON.stringify(key);
 	}
@@ -220,19 +233,52 @@ objectDiff.diffOwnProperties = function diffOwnProperties(a, b) {
 	 * @return {string}
 	 */
 	function inspect(obj) {
-		switch(typeof obj) {
-			case 'object':
-				var properties = [];
-				for (var key in obj) {
-					properties.push(stringifyObjectKey(escapeHTML(key)) + '<span>: </span>' + inspect(obj[key]));
-				}
-				return '<span>{</span>\n<div class="level">' + properties.join('<span>,</span>\n') + '\n</div><span>}</span>';
 
-			case 'string':
-				return JSON.stringify(escapeHTML(obj));
+		return _inspect('', obj);
 
-			default:
-				return escapeHTML(obj.toString());
+		/**
+		 * @param {string} accumulator
+		 * @param {object} obj
+		 * @see http://jsperf.com/continuation-passing-style/3
+		 * @return {string}
+		 */
+		function _inspect(accumulator, obj) {
+			switch(typeof obj) {
+				case 'object':
+					if (!obj) {
+						accumulator += 'null';
+						break;
+					}
+					var keys = Object.keys(obj);
+					var length = keys.length;
+					if (length === 0) {
+						accumulator += '<span>{}</span>';
+					} else {
+						accumulator += '<span>{</span>\n<div class="diff-level">';
+						for (var i = 0; i < length; i++) {
+							var key = keys[i];
+							accumulator = _inspect(accumulator + stringifyObjectKey(escapeHTML(key)) + '<span>: </span>', obj[key]);
+							if (i < length - 1) {
+								accumulator += '<span>,</span>\n';
+							}
+						}
+						accumulator += '\n</div><span>}</span>'
+					}
+					break;
+
+				case 'string':
+					accumulator += JSON.stringify(escapeHTML(obj));
+					break;
+
+				case 'undefined':
+					accumulator += 'undefined';
+					break;
+
+				default:
+					accumulator += escapeHTML(String(obj));
+					break;
+			}
+			return accumulator;
 		}
 	}
 })();

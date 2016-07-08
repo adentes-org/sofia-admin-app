@@ -1,3 +1,12 @@
+
+/* Applying size variation */
+.button-small {
+  font-size: .8rem;
+  height: 2.8rem;
+  line-height: 2.8rem;
+  padding: 0 1.5rem;
+}
+
 #menu>.button {
     margin-right: 0.8rem;
 }
@@ -20,6 +29,35 @@
     padding:2px;
 }
 
+#conflict .fiche, #conflict .column {
+  background: #d1d1d1;
+  text-align: center;
+  border-radius: .4rem;
+  margin-bottom: 2.5rem;
+  margin: 0 10px 10px 10px;
+}
+#conflict .button {
+  margin-right: 0.8rem;
+}
+#conflict .diff-box{
+  text-align: left;
+  margin: 0px -10px;
+  border-radius: .4rem;
+}
+#conflict textarea{
+  height: 100%;
+  width: calc(100% + 10px);
+  text-align: left;
+  white-space: pre-wrap;
+    color: #606c76;
+    font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+    font-size: 0.96em;
+    font-weight: 300;
+    letter-spacing: .01em;
+    line-height: 1.6;
+}
+
+
 @media print {
    .app>:not(.page), #export>button {
      display:none;
@@ -30,4 +68,44 @@
    #export>#table{
      font-size: 65%;
    }
+}
+
+/* import form Diff lib */
+
+.diff {
+ display: inline-block;
+}
+.diff-level{
+ margin-left: 1.6em;
+}
+.diff-holder{
+ color: #666;
+ margin: 0;
+}
+.diff-holder span{
+ color: #AAA;
+}
+del.diff {
+ text-decoration: none;
+ color: #b30000;
+ background: #fadad7;
+}
+ins.diff {
+ background: #eaf2c2;
+ color: #406619;
+ text-decoration: none;
+}
+del.diff-key{
+ border: 1px solid #f8a4a4;
+}
+ins.diff-key{
+ border: 1px solid #a3ce4c;
+ margin-top: -1px;
+ position: relative;
+}
+ins.diff span{
+ color: #AABF40;
+}
+del.diff span{
+ color: #EE8177;
 }
