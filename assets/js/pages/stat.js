@@ -327,7 +327,17 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             //this.config.ownerToShow.$add(user, {max:5});
           }
           this.$set("config.ownerToShow", ownerToShow);
-          this.charts = {}; //Reset
+          
+          //this.charts = {}; //Reset //Too desctructive
+          $.each(this.charts, function (index, config) { //only reset owner grpah
+          	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
+          		//We are in a owner index;
+          		var owner = index.split("-")[2];
+          		if(typeof ownerToShow[owner] === "undefined"){ //not present anymore
+	          		delete this.charts[index]; //remove graph
+          		}
+          	}
+          })
           this.getStats();
         },
         saveConfig : function(){
