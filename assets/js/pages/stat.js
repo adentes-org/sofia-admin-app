@@ -139,6 +139,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
   		template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
   		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
                 '<button class="button-primary float-right" @click="saveConfig">saveConfig</button>'+
+                '<button class="button-primary float-right" style="margin-right: 5px;" @click="reloadConfig">reloadConfig</button>'+
                 '<div id="config"><p>Nb max global : <input v-model="config.global.max_open" /></p><p>'+
                   '<button v-for="user in users" @click="addToOwnerToShow" class="button button-small {{config.ownerToShow[user]?\'\':\'button-outline\'}}" style="margin-right:5px;">{{ user }}</button>'+
                 '</p></div><hr>'+
@@ -344,6 +345,9 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           }).catch(function (err) {
             console.log(err);
           });
+        },
+        reloadConfig : function(){
+          return this.getConfig().then(this.getStats);
         },
         getConfig : function(){
           var vue =  this;
