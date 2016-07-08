@@ -350,9 +350,9 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             return vue.db.fiches.put(doc).then(function(doc){
               //window.location.reload(); //TODO reload grpah dinamicly OR REST local graph
               //vue.charts = {};
-              delete vue.charts['container-open']; //Only this one need to be reset
-
-              this.getStats();// Normally call by onchange also but in case (sinc func is debounce)
+              //delete vue.charts['container-open']; //Only this one need to be reset
+              //this.getStats();// Normally call by onchange also but in case (sinc func is debounce)
+              //No need to do anyrhing this will trigger oncange and this.getConfig().then(this.getStats);
             });
           }).catch(function (err) {
             console.log(err);
