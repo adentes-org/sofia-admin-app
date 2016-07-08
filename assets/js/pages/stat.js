@@ -285,12 +285,12 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
         },
         generateSpecificOptionGauge : function(title,max,serie){
           return {
-          			title: {
-          					text: title
-          			},
-          			yAxis: {
-          					min: 0,
-          			    max: max,
+          	title: {
+          		text: title
+          	},
+          	yAxis: {
+          	    min: 0,
+          	    max: max,
                     title: {
                         text: 'open'
                     },
@@ -349,7 +349,9 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             }
             return vue.db.fiches.put(doc).then(function(doc){
               //window.location.reload(); //TODO reload grpah dinamicly OR REST local graph
-              vue.charts = {};
+              //vue.charts = {};
+              delete vue.charts['container-open']; //Only this one need to be reset
+
               this.getStats();// Normally call by onchange also but in case (sinc func is debounce)
             });
           }).catch(function (err) {
@@ -360,7 +362,10 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           var vue =  this;
           return this.db.fiches.get('_design/sofia-config').then(function (doc) {
             // handle result
-            console.log("Get config",doc.config)
+            console.log("Get config",doc.config,doc.users)
+            if(typeof doc.users !== "undefined"){
+              vue.$set("users", doc.users);
+            }
             if(typeof doc.config !== "undefined"){ //TODO checkuo config format
             /* old methods
               if(JSON.stringify({ global : vue.config.global,  ownerToShow : vue.config.ownerToShow }) !== JSON.stringify(doc.config)){ //We have update we reset
@@ -368,14 +373,14 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               }
             //*/
             //*
-              //console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),SON.stringify(vue.config.global),JSON.stringify(doc.config.global))
+              console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),JSON.stringify(vue.config.global),JSON.stringify(doc.config.global))
               if(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global)){ //We have update we reset
                 delete vue.charts['container-open'];
                 //delete vue.charts['container-affection']; //Don't depend on global (yet)
                 //delete vue.charts['container-historic']; //Don't depend on global (yet)
               }
 
-              //console.log(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow),SON.stringify(vue.config.ownerToShow),JSON.stringify(doc.config.ownerToShow))
+              console.log(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow),JSON.stringify(vue.config.ownerToShow),JSON.stringify(doc.config.ownerToShow))
               if(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow)){ //We have update we reset
 	          $.each(vue.charts, function (index, config) { //only reset owner grpah
 	          	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
@@ -386,9 +391,6 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               }
               //*/
               vue.$set("config", $.extend({},vue.config,doc.config)); //Apply config
-            }
-            if(typeof doc.users !== "undefined"){
-              vue.$set("users", doc.users);
             }
 
             console.log(vue.config);
