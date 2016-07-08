@@ -1,21 +1,23 @@
 define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg"], function($,Vue,PouchDB,config,pages,db) {
 	var S = {
 		db: db,
-		pages : pages
+		pages : pages,
+		statOnly : window.location.hash.slice(1) === "stat" //Add #stat to only log for stat
 	};
 	window.S = S;
 	$(function(){
+		
 		$("body>.app-loading").remove();
 		var base = 	'<button style="display:none;" class="button-primary float-right" @click="logout" id="admin_user"></button>'+
 								"<h1>SOFIA - Admin console</h1><menu :current='view'></menu><component v-ref:page :db='db' :config='config' :is='view'></component>"  //https://vuejs.org/guide/components.html#Dynamic-Components
 		$("body>.app").html(base);
 
 		S.app = new Vue({
-			el: '.app',
-			data: {
-				view: 'configuration',
-				config: config,
-				db: db
+		  el: '.app',
+		  data: {
+			view:  (S.statOnly)?'stat':'configuration',
+			config: config,
+			db: db
 		  },
 		  components: pages.components,
 			events: {
@@ -36,11 +38,13 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 			}
 		})
 		//*
-		db.tools.login().then(function(info){
+		db.tools.login({isStatOnly : S.statOnly}).then(function(info){
 			console.log("We are in !",info)
-			db.tools.monitor(db.users,function(change){
-				S.app.$refs.page.$dispatch('onchange',change); //Forward change event
-			});
+			if(!S.statOnly){ // We need to monitor users db if full admin
+				db.tools.monitor(db.users,function(change){
+					S.app.$refs.page.$dispatch('onchange',change); //Forward change event
+				});
+			}
 			db.tools.monitor(db.fiches,function(change){
 				S.app.$refs.page.$dispatch('onchange',change); //Forward change event
 			});
