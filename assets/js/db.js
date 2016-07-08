@@ -30,13 +30,17 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					params = {isStatOnly: false};
 				}
 				
-				var data = (params.isStatOnly)?db.fiches:db.users;
-				console.log(typeof data.info);
-				if(typeof data.info !== "function"){
+				var d = (params.isStatOnly)?'fiches':'users';
+				console.log(typeof db.users.info);
+				console.log(typeof db.fiches.info);
+				console.log(typeof db[d].info);
+				if(typeof db[d].info !== "function"){
 					db.tools.askCredential();
 				}
-				console.log(typeof data.info);
-				return data.info().then(function (info) {
+				console.log(typeof db.users.info);
+				console.log(typeof db.fiches.info);
+				console.log(typeof db[d].info);
+				return db[d].info().then(function (info) {
 					//We are logged in
 					db.isLoggued = true;
 					db.tools.bckpConfig();
