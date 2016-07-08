@@ -21,6 +21,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   title: {
                       text: 'Value'
                   },
+                  allowDecimals : false,
                   plotLines: [{
                       value: 0,
                       width: 1,
