@@ -1,8 +1,8 @@
-define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], function($,Highcharts) {
+define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gauge'], function($,tool,Highcharts) {
   return {
   		props: ['db','config'],
 			data: function () {
-    		return { stats : {}, charts: {},last_update : null,
+    		return { stats : {}, users : [] ,charts: {},last_update : null,
           options : {
             histOptions : {
               chart: {
@@ -138,6 +138,10 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
       },
   		template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
   		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
+                '<button class="button-primary float-right" @click="saveConfig">saveConfig</button>'+
+                '<div id="config"><p>Nb max global : <input v-model="config.global.max_open" /></p><p>'+
+                  '<button v-for="user in users" @click="addToOwnerToShow" class="button button-small {{config.ownerToShow[user]?\'\':\'button-outline\'}}" style="margin-right:5px;">{{ user }}</button>'+
+                '</p></div><hr>'+
                 '<div id="global"><p>Nb fiche ouverte : {{stats.fiche.open}}</p><p>Nb fiche fermée : {{stats.fiche.close}}</p><br/></div>'+
                 '<div id="global-graph" style="text-align: center;">'+
                   '<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
@@ -165,8 +169,8 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
             }else{
             	this.charts[id].series[0].setData(data.series[0].data)
             }
-            
-            
+
+
           }
         },
         updateCharts : function(){
@@ -198,7 +202,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 	y:stats.fiche.open
                 }]
            });
-	  
+
           this.chart('container-open',Highcharts.merge(this.options.gaugeOptions,specificGaugeOptions))
           this.chart('container-affection',Highcharts.merge(this.options.pieOptions,specificPieOptions))
           this.chart('container-historic',Highcharts.merge(this.options.histOptions,specificHistOptions))
@@ -259,7 +263,7 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                 },
                 legend: {
                   enabled: displayLegends
-                },            
+                },
                 plotOptions: {
 	                pie: {
 	                    dataLabels: {
@@ -309,9 +313,59 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
           	}
         },
         forceUpdt : function(){
-        	this.getStats().then(this.updateCharts);
+        	this.getStats();
         },
-        getStats : function(){
+        addToOwnerToShow : function(event){
+          var user = $(event.target).text();
+          var ownerToShow = $.extend({},this.config.ownerToShow);
+
+          if (this.config.ownerToShow[user]){
+            delete ownerToShow[user]
+          } else {
+            ownerToShow[user] = {max:5};
+            //this.config.ownerToShow.$add(user, {max:5});
+          }
+          this.$set("config.ownerToShow", ownerToShow);
+          this.charts = {}; //Reset
+          this.getStats();
+        },
+        saveConfig : function(){
+          var vue =  this;
+          this.db.fiches.get('_design/sofia-config').then(function (doc) {
+            doc.config = {
+              global : vue.config.global,
+              ownerToShow : vue.config.ownerToShow
+            }
+            return vue.db.fiches.put(doc).then(function(doc){
+              //window.location.reload(); //TODO reload grpah dinamicly OR REST local graph
+              vue.charts = {};
+              this.getStats();// Normally call by onchange also but in case (sinc func is debounce)
+            });
+          }).catch(function (err) {
+            console.log(err);
+          });
+        },
+        getConfig : function(){
+          var vue =  this;
+          return this.db.fiches.get('_design/sofia-config').then(function (doc) {
+            // handle result
+            console.log("Get config",doc.config)
+            if(typeof doc.config !== "undefined"){ //TODO checkuo config format
+              if(JSON.stringify({ global : vue.config.global,  ownerToShow : vue.config.ownerToShow }) !== JSON.stringify(doc.config)){ //We have update we reset
+                vue.charts = {};
+              }
+              vue.$set("config", $.extend({},vue.config,doc.config)); //Apply config
+            }
+            if(typeof doc.users !== "undefined"){
+              vue.$set("users", doc.users);
+            }
+
+            console.log(vue.config);
+          }).catch(function (err) {
+            console.log(err);
+          });
+        },
+        getStats : tool.debounce(function(){
           var vue = this;
           return vue.db.fiches.allDocs({include_docs: true}).then(function(result){
         		console.log(result);
@@ -388,9 +442,10 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
         		console.log(stats);
             vue.stats = stats;
             vue.last_update = new Date();
+            vue.updateCharts()
 //        		$("#stat_vue").html(formatStats(stats));
         	});
-        }
+        }, 250)
 			},
     	events: {
     	  onload : function(){
@@ -399,15 +454,21 @@ define(['jquery','highcharts','highcharts-more','highcharts-solid-gauge'], funct
                   useUTC: false
               }
           });
-          this.getStats().then(this.updateCharts);
+          this.getConfig().then(this.getStats);
     	  },
     	  onchange : function(change){
+          console.log(change)
           /* We don't care since we update dinammicly graph
           if(typeof change.message !== "undefined"){
            return; //This is a error event do not update.
           }
           */
-          this.getStats().then(this.updateCharts);
+          //TODO getConfig if _design/sofia-config in change
+          if(change.id && change.id === "_design/sofia-config"){
+            this.getConfig().then(this.getStats);
+          }else{
+            this.getStats();
+          }
     	  }
       }
 	};

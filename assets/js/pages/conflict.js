@@ -148,10 +148,6 @@ define(["objectdiff","jquery"], function(objectDiff,$) {
                     type : "action",
                     action : "AdminMergeConflict",
                     message : "Conflict detected and merged by admin!",
-                    /* This take to much space
-                    diff : objectDiff.diff(JSON.parse($(".page#conflict>#editor>#src").html()),obj),
-                    conflict : JSON.parse($(".page#conflict>#editor>#conflict").html()),
-                    */
                     diff: vue.getDiffConflict(vue.current.src,obj),
                     timestamp : Date.now(),
                     user :  vue.db.users.__opts.auth.username

@@ -1,14 +1,9 @@
 define([], function() {
   return {
   	global : {
-  		max_open : 50
+  		max_open : 10 //Default confg
   	},
-  	ownerToShow : {
-  		"username" : {max:20},
-  		"echo1": {max:10},
-  		"golf": {max:5},
-  		"Team1": {max:2}
-  	},
+  	ownerToShow : {}, //DEfault config
   	affectionColor : {
   		    "undefined" : "#B09F91",
           "unconscious" : "#f15c80",

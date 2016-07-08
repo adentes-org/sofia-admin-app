@@ -15,12 +15,12 @@ define(["jquery", "trumbowyg"], function($) {
 		          // handle result
 		          console.log("Get memo",doc)
 		          vue.rev = doc._rev;
-		
+
 		          var reader = new FileReader();
 		          reader.onload = function (event) {
 		            console.log("Memo result : "+reader.result)
 		            vue.memo = reader.result;
-			    $('#memo textarea').trumbowyg('html', vue.memo);
+			          $('#memo textarea').trumbowyg('html', vue.memo);
 		            //$('#memo textarea').val(vue.memo);
 		          };
 		          reader.readAsText(doc._attachments['memo.html'].data);
@@ -35,9 +35,9 @@ define(["jquery", "trumbowyg"], function($) {
 	          var memo = $('#memo textarea').val(); this.memo = memo;
 	          //var memo = $('#memo textarea').trumbowyg('html'); this.memo = memo;
 	          console.log("Vue obj : "+this.memo+" rev:"+this.rev);
-	
+
 	          var attachment = new Blob([memo], { type: 'text/html' });
-	
+
 	          $('#memo>button').attr('disabled', 'disabled').text('Sending ...').blur();
 	          console.log('Updating memo ...', attachment, this.rev);
 	          //*
@@ -65,7 +65,7 @@ define(["jquery", "trumbowyg"], function($) {
 	          this.getMemo();
 	        },
 	        onchange : function(change){
-	          if(typeof change.message !== "undefined"){ 
+	          if(typeof change.message !== "undefined"){
 		         return; //This is a error event do not update.
 	          }
                   this.getMemo();
