@@ -31,9 +31,11 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}
 				
 				var data = (params.isStatOnly)?db.fiches:db.users;
+				console.log(typeof data.info);
 				if(typeof data.info !== "function"){
 					db.tools.askCredential();
 				}
+				console.log(typeof data.info);
 				return data.info().then(function (info) {
 					//We are logged in
 					db.isLoggued = true;
