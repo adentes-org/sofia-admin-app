@@ -322,7 +322,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           if (this.config.ownerToShow[user]){
             delete ownerToShow[user]
           } else {
-            ownerToShow[user] = {max:5};
+            ownerToShow[user] = {max:parseInt(prompt("Max on gauge graph ?", "5"))};
             //this.config.ownerToShow.$add(user, {max:5});
           }
           this.$set("config.ownerToShow", ownerToShow);
