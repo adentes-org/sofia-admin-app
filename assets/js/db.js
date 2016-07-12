@@ -73,6 +73,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 						return db['fiches'].info().then(function (info) {
 							//DB  exist
 							db.tools.bckpConfig();
+							//TODO still check-up _security and config design
 							return info;
 						}).catch(function (error) {
 							//DB fiche don't exist
