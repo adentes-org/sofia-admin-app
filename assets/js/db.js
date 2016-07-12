@@ -34,15 +34,21 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					skip_setup: false
 				}); //Create DB
 				
-				//echo "Applying secu on database: \"$DB\"..."
-				//curl -X PUT -d '{"admins":{"names":[],"roles":[]},"members":{"names":[],"roles":["equipier"]}}' $HOST/$DB/_security
-
+				//Apply secu
+				return db.fiches.put({
+				  _id: '_security',
+				  "admins":{"names":[],"roles":[]},
+				  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+				}).then(function (result) {
+				  //Secu applied
+				  return db.fiches.compact() //Compacting $DB
+				}).catch(function (err) {
+				  console.log(err);
+				  alert(err); //TODO better handle
+				});
+				//TODO create default config (memo, user list and graph config)
 				//echo "Uploading default config in database: \"$DB\"..."
 				//curl -X PUT -H "Content-Type:text/html" --data-binary "<h2>Hello World</h2>" "$HOST/$DB/_design/sofia-config/memo.html"
-
-				//echo "Compacting database $DB"
-				//curl -X POST -H 'Content-Type: application/json' $HOST/$DB/_compact
-				//TODO apply secu
 			},
 			login : function(params) {
 				//Check-up of params
