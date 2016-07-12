@@ -35,6 +35,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				});
 			},
 			createConfig : function(db) {
+				var attachment = new Blob(["<h2>Hello World</h2>"], { type: 'text/html' });
 				return db.request({
 				      method: "PUT",
 				      url: '_design/sofia-config',
@@ -47,6 +48,8 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				      		ownerToShow : []
 				      	},
 				      }
+				}).then(function(doc){
+					return db.putAttachment('_design/sofia-config', 'memo.html', doc._rev, attachment, 'text/html');
 				});
 			},
 			createFicheDB : function(dbname) {
@@ -68,9 +71,6 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  console.log(err);
 				  alert(err); //TODO better handle
 				});
-				//TODO create default config (memo, user list and graph config)
-				//echo "Uploading default config in database: \"$DB\"..."
-				//curl -X PUT -H "Content-Type:text/html" --data-binary "<h2>Hello World</h2>" "$HOST/$DB/_design/sofia-config/memo.html"
 			},
 			login : function(params) {
 				//Check-up of params
