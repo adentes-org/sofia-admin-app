@@ -24,11 +24,23 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  console.log(err);//TODO check if needed to relaunch monitor
 				});
 			},
-			login : function() {
-				if(typeof db.users.info !== "function"){
+			login : function(params) {
+				//Check-up of params
+				if(typeof params === "undefined" || typeof params.isStatOnly === "undefined" ){
+					params = {isStatOnly: false};
+				}
+				
+				var d = (params.isStatOnly)?'fiches':'users';
+				console.log(typeof db.users.info);
+				console.log(typeof db.fiches.info);
+				console.log(typeof db[d].info);
+				if(typeof db[d].info !== "function"){
 					db.tools.askCredential();
 				}
-				return db.users.info().then(function (info) {
+				console.log(typeof db.users.info);
+				console.log(typeof db.fiches.info);
+				console.log(typeof db[d].info);
+				return db[d].info().then(function (info) {
 					//We are logged in
 					db.isLoggued = true;
 					db.tools.bckpConfig();
@@ -37,7 +49,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					//We are not logged in
 					console.log('Error detected', error);
 					db.tools.askCredential();
-					return db.tools.login();
+					return db.tools.login(params);
 				})
 				//TODO check fiche db access
 			},

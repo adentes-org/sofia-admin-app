@@ -1,8 +1,12 @@
 define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gauge'], function($,tool,Highcharts) {
   return {
-  		props: ['db','config'],
-			data: function () {
-    		return { stats : {}, users : [] ,charts: {},last_update : null,
+  	props: ['db','config'],
+	data: function () {
+    		return { 
+    	  stats : {},
+    	  users : [], 
+    	  charts: {}, 
+    	  last_update : null,
           options : {
             histOptions : {
               chart: {
@@ -21,6 +25,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   title: {
                       text: 'Value'
                   },
+                  allowDecimals : false,
                   plotLines: [{
                       value: 0,
                       width: 1,
@@ -67,8 +72,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   }
               },
               series: []
-            },
-            gaugeOptions :{
+           },
+           gaugeOptions :{
               chart: {
                  type: 'gauge',
                  plotBackgroundColor: null,
@@ -114,6 +119,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
              yAxis: {
                  min: 0,
                  max: 200,
+                 allowDecimals : false,
                  minorTickInterval: 'auto',
                  minorTickWidth: 1,
                  minorTickLength: 10,
@@ -136,13 +142,14 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           }
   		  }
       },
-  		template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
+      template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
   		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
-                '<button class="button-primary float-right" @click="saveConfig">saveConfig</button>'+
-                '<button class="button-primary float-right" style="margin-right: 5px;" @click="reloadConfig">reloadConfig</button>'+
-                '<div id="config"><p>Nb max global : <input v-model="config.global.max_open" /></p><p>'+
-                  '<button v-for="user in users" @click="addToOwnerToShow" class="button button-small {{config.ownerToShow[user]?\'\':\'button-outline\'}}" style="margin-right:5px;">{{ user }}</button>'+
-                '</p></div><hr>'+
+  		'<div v-if="!config.statOnly" id="config">'+
+	                '<button class="button-primary float-right" @click="saveConfig">saveConfig</button>'+
+	                '<button class="button-primary float-right" style="margin-right: 5px;" @click="reloadConfig">reloadConfig</button>'+
+	                '<p>Nb max global : <input v-model="config.global.max_open" /></p>'+
+	                '<p><button v-for="user in users" @click="addToOwnerToShow" class="button button-small {{config.ownerToShow[user]?\'\':\'button-outline\'}}" style="margin-right:5px;">{{ user }}</button></p>'+
+	        '</div><hr>'+
                 '<div id="global"><p>Nb fiche ouverte : {{stats.fiche.open}}</p><p>Nb fiche fermée : {{stats.fiche.close}}</p><br/></div>'+
                 '<div id="global-graph" style="text-align: center;">'+
                   '<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
@@ -280,54 +287,59 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
         },
         generateSpecificOptionGauge : function(title,max,serie){
           return {
-          			title: {
-          					text: title
-          			},
-          			yAxis: {
-          					min: 0,
-          			    max: max,
+          	title: {
+          		text: title
+          	},
+          	yAxis: {
+          	    min: 0,
+          	    max: max,
                     title: {
                         text: 'open'
                     },
-          					plotBands: [{
-          							from: 0,
-          							to: max*0.6,
-          							color: '#55BF3B' // green
-          					}, {
-          							from: max*0.6,
-          							to: max*0.8,
-          							color: '#DDDF0D' // yellow
-          					}, {
-          							from: max*0.80,
-          							to: max,
-          							color: '#DF5353' // red
-          					}]
-          			},
-          			series: [serie]
-                /* serie = {
-          					name: 'Open',
-          					data: [stats.fiche.open],
-          					tooltip: {
-          							valueSuffix: ' fiche(s)'
-          					}
-          			}*/
-          	}
+          	    plotBands: [{
+          		from: 0,
+          	 	to: max*0.6,
+          		color: '#55BF3B' // green
+          	    }, {
+          	  	from: max*0.6,
+          		to: max*0.8,
+          		color: '#DDDF0D' // yellow
+          	    }, {
+          		from: max*0.80,
+          		to: max,
+          		color: '#DF5353' // red
+          	    }]
+          	},
+          	series: [serie]
+            }
         },
         forceUpdt : function(){
         	this.getStats();
         },
         addToOwnerToShow : function(event){
+          var vue = this;
           var user = $(event.target).text();
           var ownerToShow = $.extend({},this.config.ownerToShow);
 
           if (this.config.ownerToShow[user]){
             delete ownerToShow[user]
           } else {
-            ownerToShow[user] = {max:5};
+            ownerToShow[user] = {max:parseInt(prompt("Max on gauge graph ?", "5"))};
             //this.config.ownerToShow.$add(user, {max:5});
           }
           this.$set("config.ownerToShow", ownerToShow);
-          this.charts = {}; //Reset
+          
+          //this.charts = {}; //Reset //Too desctructive
+          $.each(vue.charts, function (index, config) { //only reset owner grpah
+          	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
+          		//We are in a owner index;
+          		var owner = index.split("-")[2];
+          		if(typeof ownerToShow[owner] === "undefined"){ //not present anymore
+	          		delete vue.charts[index]; //remove graph
+          		}
+	          	//delete vue.charts[index]; //Remove all owner graph
+          	}
+          })
           this.getStats();
         },
         saveConfig : function(){
@@ -339,8 +351,10 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             }
             return vue.db.fiches.put(doc).then(function(doc){
               //window.location.reload(); //TODO reload grpah dinamicly OR REST local graph
-              vue.charts = {};
-              this.getStats();// Normally call by onchange also but in case (sinc func is debounce)
+              //vue.charts = {};
+              delete vue.charts['container-open']; //Only this one need to be reset
+              //this.getStats();// Normally call by onchange also but in case (sinc func is debounce)
+              //No need to do anyrhing this should trigger oncange and this.getConfig().then(this.getStats);
             });
           }).catch(function (err) {
             console.log(err);
@@ -353,15 +367,35 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           var vue =  this;
           return this.db.fiches.get('_design/sofia-config').then(function (doc) {
             // handle result
-            console.log("Get config",doc.config)
+            console.log("Get config",doc.config,doc.users)
+            if(typeof doc.users !== "undefined"){
+              vue.$set("users", doc.users);
+            }
             if(typeof doc.config !== "undefined"){ //TODO checkuo config format
+            /* old methods
               if(JSON.stringify({ global : vue.config.global,  ownerToShow : vue.config.ownerToShow }) !== JSON.stringify(doc.config)){ //We have update we reset
                 vue.charts = {};
               }
+            //*/
+            //*
+              console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),JSON.stringify(vue.config.global),JSON.stringify(doc.config.global))
+              if(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global)){ //We have update we reset
+                delete vue.charts['container-open'];
+                //delete vue.charts['container-affection']; //Don't depend on global (yet)
+                //delete vue.charts['container-historic']; //Don't depend on global (yet)
+              }
+
+              console.log(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow),JSON.stringify(vue.config.ownerToShow),JSON.stringify(doc.config.ownerToShow))
+              if(JSON.stringify(vue.config.ownerToShow) !== JSON.stringify(doc.config.ownerToShow)){ //We have update we reset
+	          $.each(vue.charts, function (index, config) { //only reset owner grpah
+	          	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
+	          		//We are in a owner index;
+		          	delete vue.charts[index]; //Remove all owner graph
+	          	}
+	          })
+              }
+              //*/
               vue.$set("config", $.extend({},vue.config,doc.config)); //Apply config
-            }
-            if(typeof doc.users !== "undefined"){
-              vue.$set("users", doc.users);
             }
 
             console.log(vue.config);
