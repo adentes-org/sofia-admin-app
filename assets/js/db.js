@@ -40,6 +40,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				      method: "PUT",
 				      url: '_design/sofia-config',
 				      body: {
+				      	token : Math.floor((1 + Math.random()) * 0x1000000000000000000).toString(34), //Token generate at creation to dectect new DB with same name as old one
 				      	users : [],
 				      	config : {
 				      		global : {
