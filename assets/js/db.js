@@ -21,7 +21,57 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}).on('error', function (err) {
 				  onchange(err);
 				  db.tools.monitor(data,onchange);
-				  console.log(err);//TODO check if needed to relaunch monitor
+				  console.log(err);
+				});
+			},
+			createSecurity : function(db) {
+				return db.request({
+				      method: "PUT",
+				      url: '_security',
+				      body: {
+					  "admins":{"names":[],"roles":[]},
+					  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+					}
+				});
+			},
+			createConfig : function(db) {
+				var attachment = new Blob(["<h2>Hello World</h2>"], { type: 'text/html' });
+				return db.request({
+				      method: "PUT",
+				      url: '_design/sofia-config',
+				      body: {
+				      	users : [],
+				      	config : {
+				      		global : {
+				      			max_open : 10	
+				      		},
+				      		ownerToShow : []
+				      	},
+				      }
+				}).then(function(doc){
+					return db.get('_design/sofia-config').then(function(doc) {
+						return db.putAttachment('_design/sofia-config', 'memo.html', doc._rev, attachment, 'text/html');
+					});
+				});
+			},
+			createFicheDB : function(dbname) {
+				db.config.dbname.fiche = dbname;
+				urls = db.tools.getUrl();
+
+				db.fiches = new PouchDB(urls.fiche, {
+					auth : db.config.creds,
+					ajax: {timeout: 20000},
+					skip_setup: false
+				}); //Create DB
+				
+				//Apply secu
+				db.tools.createSecurity(db.fiches).then(function (result) {
+				  return db.tools.createConfig(db.fiches)
+				}).then(function (result) {
+				  return db.fiches.compact() //Compacting $DB
+				}).catch(function (err) {
+				  console.log(err);
+				  alert(err); //TODO better handle
 				});
 			},
 			login : function(params) {
@@ -31,27 +81,43 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}
 				
 				var d = (params.isStatOnly)?'fiches':'users';
-				console.log(typeof db.users.info);
-				console.log(typeof db.fiches.info);
-				console.log(typeof db[d].info);
 				if(typeof db[d].info !== "function"){
 					db.tools.askCredential();
 				}
-				console.log(typeof db.users.info);
-				console.log(typeof db.fiches.info);
-				console.log(typeof db[d].info);
+
 				return db[d].info().then(function (info) {
 					//We are logged in
 					db.isLoggued = true;
 					db.tools.bckpConfig();
-					return info;
+					if(!params.isStatOnly){
+						//Check fiche db access if in admin mode.
+						return db['fiches'].info().then(function (info) {
+							//DB  exist
+							db.tools.bckpConfig();
+							//TODO still check-up _security and config design
+							return info;
+						}).catch(function (error) {
+							//DB fiche don't exist
+							console.log('Error detected', error);
+							if (confirm("DB '"+db.config.dbname.fiche+"' don't exist create it ?")) {
+								//Create DB
+								return db.tools.createFicheDB(db.config.dbname.fiche);
+							} else {
+								//ask for another name
+								db.tools.setUrl(); //re-generate PouchDb object (only re-ask for DB fiche name)
+								return db.tools.login(params);
+							}
+						})	
+					}else{
+						return info; //We are in stat only mode
+					}
 				}).catch(function (error) {
 					//We are not logged in
 					console.log('Error detected', error);
 					db.tools.askCredential();
 					return db.tools.login(params);
 				})
-				//TODO check fiche db access
+				
 			},
 			getUrl : function() {
 				return {
