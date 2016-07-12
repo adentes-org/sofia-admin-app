@@ -49,7 +49,9 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				      	},
 				      }
 				}).then(function(doc){
-					return db.putAttachment('_design/sofia-config', 'memo.html', doc._rev, attachment, 'text/html');
+					return db.get('_design/sofia-config').then(function(doc) {
+						return db.putAttachment('_design/sofia-config', 'memo.html', doc._rev, attachment, 'text/html');
+					});
 				});
 			},
 			createFicheDB : function(dbname) {
