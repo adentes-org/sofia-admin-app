@@ -64,6 +64,7 @@ define(["jquery","app/tool"], function($,tool) {
           password: $('#add-user input#password').val(),
           roles: [
              'equipier',
+             'equipier-'+this.db.config.dbname.fiche,
           ],
         };
 

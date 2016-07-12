@@ -24,13 +24,13 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  console.log(err);
 				});
 			},
-			createSecurity : function(db) {
+			createSecurity : function(db,dbname) {
 				return db.request({
 				      method: "PUT",
 				      url: '_security',
 				      body: {
 					  "admins":{"names":[],"roles":[]},
-					  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+					  "members":{"names":[],"roles":["equipier","equipier-"+dbname]} //TODO remove  common equipier role after complete migration
 					}
 				});
 			},
@@ -40,6 +40,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				      method: "PUT",
 				      url: '_design/sofia-config',
 				      body: {
+				      	token : Math.floor((1 + Math.random()) * 0x1000000000000000000).toString(34), //Token generate at creation to dectect new DB with same name as old one
 				      	users : [],
 				      	config : {
 				      		global : {
@@ -65,7 +66,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}); //Create DB
 				
 				//Apply secu
-				db.tools.createSecurity(db.fiches).then(function (result) {
+				db.tools.createSecurity(db.fiches,dbname).then(function (result) {
 				  return db.tools.createConfig(db.fiches)
 				}).then(function (result) {
 				  return db.fiches.compact() //Compacting $DB
