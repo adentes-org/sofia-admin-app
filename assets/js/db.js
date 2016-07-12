@@ -39,14 +39,28 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					//We are logged in
 					db.isLoggued = true;
 					db.tools.bckpConfig();
-					return info;
+					if(!params.isStatOnly){
+						//Check fiche db access if in admin mode.
+						return db['fiches'].info().then(function (info) {
+							//DB  exist
+							db.tools.bckpConfig();
+							return info;
+						}).catch(function (error) {
+							//DB fiche don't exist
+							console.log('Error detected', error);
+							db.tools.setUrl(); //re-generate PouchDb object (only re-ask for DB fiche name)
+							return db.tools.login(params);
+						})	
+					}else{
+						return info; //We are in stat only mode
+					}
 				}).catch(function (error) {
 					//We are not logged in
 					console.log('Error detected', error);
 					db.tools.askCredential();
 					return db.tools.login(params);
 				})
-				//TODO check fiche db access
+				
 			},
 			getUrl : function() {
 				return {
