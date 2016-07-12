@@ -24,13 +24,13 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  console.log(err);
 				});
 			},
-			createSecurity : function(db) {
+			createSecurity : function(db,dbname) {
 				return db.request({
 				      method: "PUT",
 				      url: '_security',
 				      body: {
 					  "admins":{"names":[],"roles":[]},
-					  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+					  "members":{"names":[],"roles":["equipier","equipier-"+dbname]} //TODO remove  common equipier role after complete migration
 					}
 				});
 			},
@@ -65,7 +65,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}); //Create DB
 				
 				//Apply secu
-				db.tools.createSecurity(db.fiches).then(function (result) {
+				db.tools.createSecurity(db.fiches,dbname).then(function (result) {
 				  return db.tools.createConfig(db.fiches)
 				}).then(function (result) {
 				  return db.fiches.compact() //Compacting $DB
