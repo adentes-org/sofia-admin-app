@@ -24,6 +24,26 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  console.log(err);
 				});
 			},
+			createFicheDB : function(dbname) {
+				db.config.dbname.fiche = dbname;
+				urls = db.tools.getUrl();
+
+				db.fiches = new PouchDB(urls.fiche, {
+					auth : db.config.creds,
+					ajax: {timeout: 20000},
+					skip_setup: false
+				}); //Create DB
+				
+				//echo "Applying secu on database: \"$DB\"..."
+				//curl -X PUT -d '{"admins":{"names":[],"roles":[]},"members":{"names":[],"roles":["equipier"]}}' $HOST/$DB/_security
+
+				//echo "Uploading default config in database: \"$DB\"..."
+				//curl -X PUT -H "Content-Type:text/html" --data-binary "<h2>Hello World</h2>" "$HOST/$DB/_design/sofia-config/memo.html"
+
+				//echo "Compacting database $DB"
+				//curl -X POST -H 'Content-Type: application/json' $HOST/$DB/_compact
+				//TODO apply secu
+			},
 			login : function(params) {
 				//Check-up of params
 				if(typeof params === "undefined" || typeof params.isStatOnly === "undefined" ){
@@ -48,8 +68,14 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 						}).catch(function (error) {
 							//DB fiche don't exist
 							console.log('Error detected', error);
-							db.tools.setUrl(); //re-generate PouchDb object (only re-ask for DB fiche name)
-							return db.tools.login(params);
+							if (confirm("DB '"+db.config.dbname.fiche+"' don't exist create it ?")) {
+								//Create DB
+								return db.tools.createFicheDB(db.config.dbname.fiche);
+							} else {
+								//ask for another name
+								db.tools.setUrl(); //re-generate PouchDb object (only re-ask for DB fiche name)
+								return db.tools.login(params);
+							}
 						})	
 					}else{
 						return info; //We are in stat only mode
