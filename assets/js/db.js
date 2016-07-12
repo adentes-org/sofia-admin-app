@@ -35,10 +35,13 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}); //Create DB
 				
 				//Apply secu
-				return db.fiches.put({
-				  _id: '_security',
-				  "admins":{"names":[],"roles":[]},
-				  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+				db.fiches.request({
+				      method: "PUT",
+				      url: '_security',
+				      body: {
+					  "admins":{"names":[],"roles":[]},
+					  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+					}
 				}).then(function (result) {
 				  //Secu applied
 				  return db.fiches.compact() //Compacting $DB
