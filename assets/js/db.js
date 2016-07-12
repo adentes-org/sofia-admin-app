@@ -24,6 +24,31 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				  console.log(err);
 				});
 			},
+			createSecurity : function(db) {
+				return db.request({
+				      method: "PUT",
+				      url: '_security',
+				      body: {
+					  "admins":{"names":[],"roles":[]},
+					  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
+					}
+				});
+			},
+			createConfig : function(db) {
+				return db.request({
+				      method: "PUT",
+				      url: '_design/sofia-config',
+				      body: {
+				      	users : [],
+				      	config : {
+				      		global : {
+				      			max_open : 10	
+				      		},
+				      		ownerToShow : []
+				      	},
+				      }
+				});
+			},
 			createFicheDB : function(dbname) {
 				db.config.dbname.fiche = dbname;
 				urls = db.tools.getUrl();
@@ -35,15 +60,9 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}); //Create DB
 				
 				//Apply secu
-				db.fiches.request({
-				      method: "PUT",
-				      url: '_security',
-				      body: {
-					  "admins":{"names":[],"roles":[]},
-					  "members":{"names":[],"roles":["equipier"]} //TODO use a custom equipier role based on dbname
-					}
+				db.tools.createSecurity(db.fiches).then(function (result) {
+				  return db.tools.createConfig(db.fiches)
 				}).then(function (result) {
-				  //Secu applied
 				  return db.fiches.compact() //Compacting $DB
 				}).catch(function (err) {
 				  console.log(err);
