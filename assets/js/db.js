@@ -21,7 +21,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}).on('error', function (err) {
 				  onchange(err);
 				  db.tools.monitor(data,onchange);
-				  console.log(err);//TODO check if needed to relaunch monitor
+				  console.log(err);
 				});
 			},
 			login : function(params) {
@@ -31,15 +31,10 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				}
 				
 				var d = (params.isStatOnly)?'fiches':'users';
-				console.log(typeof db.users.info);
-				console.log(typeof db.fiches.info);
-				console.log(typeof db[d].info);
 				if(typeof db[d].info !== "function"){
 					db.tools.askCredential();
 				}
-				console.log(typeof db.users.info);
-				console.log(typeof db.fiches.info);
-				console.log(typeof db[d].info);
+
 				return db[d].info().then(function (info) {
 					//We are logged in
 					db.isLoggued = true;
