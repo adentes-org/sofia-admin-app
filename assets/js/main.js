@@ -9,7 +9,7 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 	};
 	window.S = S;
 	$(function(){
-		db.init(); //Check if credentials are in cache and try them.
+		db.tools.init(); //Check if credentials are in cache and try them.
 		$("body>.app-loading").remove();
 		var base = '<button style="display:none;" class="button-primary float-right" @click="logout" id="admin_user"></button>'+
 								"<h1>SOFIA - Admin console</h1><menu :current='view'></menu><component v-ref:page :db='db' :config='config' :is='view'></component>"  //https://vuejs.org/guide/components.html#Dynamic-Components
