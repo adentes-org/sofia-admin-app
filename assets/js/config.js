@@ -3,9 +3,14 @@ define([], function() {
   	global : {
   		max_open : 10 //Default confg
   	},
-  	ownerToShow : {}, //DEfault config
+  	ownerToShow : {}, //Default config,
+  	graph : {
+  		tick : 6, //Time in seconds between point (without event)
+  		timeout : 60, //Time in seconds between forced updated (if over trigge update from db)
+  		nb_point : 60*10, //Nb point to graph nb_point*tick willl give you a rough estimation of global time of graph (force update or will shorter time between 2 points) Ex 60*10*6 = 60 minutes = 1hour
+  	},
   	affectionColor : {
-  		    "undefined" : "#B09F91",
+          "undefined" : "#B09F91",
           "unconscious" : "#f15c80",
           "cardio-respiratory-stop" : "#f45b5b",
           "little-care" : "#90ed7d",
