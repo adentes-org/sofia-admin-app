@@ -2,7 +2,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
   return {
   	props: ['db','config'],
 	data: function () {
-    		return { 
+    	return { 
     	  stats : {},
     	  users : [], 
     	  charts: {}, 
@@ -35,9 +35,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               tooltip: {
                   formatter: function () {
                       return '<b>' + this.series.name + '</b><br/>' +
-                          Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                          this.y;
-                          //Highcharts.numberFormat(this.y, 2);
+                          Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' + this.y;
                   }
               },
               legend: {
@@ -140,7 +138,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
              series: []
             }
           }
-  		  }
+  	}
       },
       template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
   		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
@@ -166,6 +164,22 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
       computed: {
       },
       methods:{
+        tick : function(){ //Generate one point base on old value or new one if timeout is over in order to have a constant graph animation.
+                //Call by timer or GetStat to update graph
+                console.log("tick");
+                if(this.tick_timer){
+	                window.clearTimeout(this.tick_timer);
+                }
+                //Compare last_update to this.config.graph.timeout and now to determinate if a pull of DB is necessary. 
+                var limit = new Date();
+                limit.setSeconds(limit.getSeconds() - this.config.graph.timeout);
+                if(this.last_update === null || this.last_update < limit){
+                	this.getStats(); //This will trigger again tick after getting data and updating last_update
+                }else{
+	            	this.updateCharts(); //Add poitn base on curretn stat
+                }
+                this.tick_timer = window.setTimeout(this.tick,this.config.graph.tick*1000)
+        },
         chart : function(id,data){
           if(typeof this.charts[id] === "undefined"){
             this.charts[id] = Highcharts.chart(id,data);
@@ -173,18 +187,17 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             //console.log(id,this.charts[id],this.charts[id].series[0])
             if(data.series[0].data.length === 1 && typeof data.series[0].data[0].x !== "undefined"){ //This a uniq point with x position (so spline point)
             	var point = [data.series[0].data[0].x,data.series[0].data[0].y];
-            	this.charts[id].series[0].addPoint(point, true, this.charts[id].series[0].data.length>50); //Over 50 points we shift oldest
+            	this.charts[id].series[0].addPoint(point, true, this.charts[id].series[0].data.length>this.config.graph.nb_point); //Over NB point to display points we shift oldest
+            	//TODO If this.config.graph.nb_point is decrease in DB config we should remove some point.
             }else{
             	this.charts[id].series[0].setData(data.series[0].data)
             }
-
-
           }
         },
         updateCharts : function(){
           var vue = this;
           var stats = vue.stats
-
+	  //TODO better detect change in stats to determine wich graph to update. (Maybe through a cach obj)
           var specificGaugeOptions = this.generateSpecificOptionGauge("Fiches ouvertes totales",this.config.global.max_open, {
               name: 'Ouvertes',
               data: [stats.fiche.open],
@@ -371,13 +384,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             if(typeof doc.users !== "undefined"){
               vue.$set("users", doc.users);
             }
-            if(typeof doc.config !== "undefined"){ //TODO checkuo config format
-            /* old methods
-              if(JSON.stringify({ global : vue.config.global,  ownerToShow : vue.config.ownerToShow }) !== JSON.stringify(doc.config)){ //We have update we reset
-                vue.charts = {};
-              }
-            //*/
-            //*
+            if(typeof doc.config !== "undefined"){ //TODO checkup config format
               console.log(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global),JSON.stringify(vue.config.global),JSON.stringify(doc.config.global))
               if(JSON.stringify(vue.config.global) !== JSON.stringify(doc.config.global)){ //We have update we reset
                 delete vue.charts['container-open'];
@@ -394,7 +401,6 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 	          	}
 	          })
               }
-              //*/
               vue.$set("config", $.extend({},vue.config,doc.config)); //Apply config
             }
 
@@ -478,10 +484,9 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           		}
         		});
         		console.log(stats);
-            vue.stats = stats;
-            vue.last_update = new Date();
-            vue.updateCharts()
-//        		$("#stat_vue").html(formatStats(stats));
+	            vue.stats = stats;
+	            vue.last_update = new Date();
+	            vue.tick(); //updateCharts() and clear timer of graphing constant point
         	});
         }, 250)
 			},
@@ -495,19 +500,13 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
           this.getConfig().then(this.getStats);
     	  },
     	  onchange : function(change){
-          console.log(change)
-          /* We don't care since we update dinammicly graph
-          if(typeof change.message !== "undefined"){
-           return; //This is a error event do not update.
-          }
-          */
-          //TODO getConfig if _design/sofia-config in change
-          if(change.id && change.id === "_design/sofia-config"){
-            this.getConfig().then(this.getStats);
-          }else{
-            this.getStats();
-          }
+	          console.log(change)
+	          if(change.id && change.id === "_design/sofia-config"){
+	            this.getConfig().then(this.getStats);
+	          }else{
+	            this.getStats();
+	          }
     	  }
       }
-	};
+   };
 })
