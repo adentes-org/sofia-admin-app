@@ -488,7 +488,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 	            vue.last_update = new Date();
 	            vue.tick(); //updateCharts() and clear timer of graphing constant point
         	});
-        }, 250)
+        }, 750)
 			},
     	events: {
     	  onload : function(){
