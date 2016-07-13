@@ -1,24 +1,24 @@
 define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg"], function($,Vue,PouchDB,config,pages,db) {
 	var S = {
 		db: db,
-		pages : pages,
-		statOnly : window.location.hash.slice(1) === "stat" //Add #stat to only log for stat
+		pages : pages
 	};
-	if(S.statOnly){
+	config.statOnly = window.location.hash.slice(1) === "stat" //Add #stat to only log for stat
+	if(config.statOnly){
 		S.pages.menu = {"stat": S.pages.menu["stat"]}; // Only stat in menu
 	};
 	window.S = S;
 	$(function(){
-		
+		db.init(); //Check if credentials are in cache and try them.
 		$("body>.app-loading").remove();
-		var base = 	'<button style="display:none;" class="button-primary float-right" @click="logout" id="admin_user"></button>'+
+		var base = '<button style="display:none;" class="button-primary float-right" @click="logout" id="admin_user"></button>'+
 								"<h1>SOFIA - Admin console</h1><menu :current='view'></menu><component v-ref:page :db='db' :config='config' :is='view'></component>"  //https://vuejs.org/guide/components.html#Dynamic-Components
 		$("body>.app").html(base);
 
 		S.app = new Vue({
 		  el: '.app',
 		  data: {
-			view:  (S.statOnly)?'stat':'configuration',
+			view:  (config.statOnly)?'stat':'configuration',
 			config: config,
 			db: db
 		  },
@@ -40,11 +40,10 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 				}
 			}
 		})
-		//*
-		S.app.config.statOnly = S.statOnly //Add to config
-		db.tools.login({isStatOnly : S.statOnly}).then(function(info){
+		
+		db.tools.login({isStatOnly : config.statOnly}).then(function(info){
 			console.log("We are in !",info)
-			if(!S.statOnly){ // We need to monitor users db if full admin
+			if(!config.statOnly){ // We need to monitor users db if full admin
 				db.tools.monitor(db.users,function(change){
 					S.app.$refs.page.$dispatch('onchange',change); //Forward change event
 				});
@@ -54,8 +53,8 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 			});
 			$(".app>button#admin_user").show().html(db.config.creds.username);
 			window.setTimeout("S.app.$refs.page.$dispatch('onload')",100);
-		})
-		//*/
+		});
+		
 	})
 	return S;
 });
