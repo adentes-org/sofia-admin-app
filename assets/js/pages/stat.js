@@ -22,6 +22,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   tickPixelInterval: 150
               },
               yAxis: {
+                  min:0,
+                  minRange:1,
                   title: {
                       text: 'Value'
                   },
