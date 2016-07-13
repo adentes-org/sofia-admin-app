@@ -242,11 +242,15 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 
 	   $.each(this.config.ownerToShow, function (id, params) {
             	var  open = 0; //Set to zero by default
+             	var  total = 0; //Set to zero by default
+             	var  deleted = 0; //Set to zero by default
               var  affection = {}; //Set to empty by default
             	if(typeof stats.owner[id] !== "undefined"){
             		  open = stats.owner[id].open;
+            		  total = stats.owner[id].total;
+            		  deleted = stats.owner[id].deleted;
               		affection = stats.owner[id].affection;
-            	}
+            	}//TODO use a base config and extend
 
                 var specificGaugeOptions = vue.generateSpecificOptionGauge(id,params.max, {
                   name: 'Ouvertes par '+id,
@@ -254,7 +258,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   tooltip: {
                     valueSuffix: ' fiche(s)'
                   }
-                },"T : "+(stats.owner[id].total-stats.owner[id].deleted));
+                },"T : "+(total-deleted));
                 var specificPieOptions = vue.generateSpecificOptionPie("Affections",false, {
                   name: 'Affections',
                   colorByPoint: true,
