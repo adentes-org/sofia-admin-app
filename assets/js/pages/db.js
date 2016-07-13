@@ -24,6 +24,9 @@ define(["jquery"], function($) {
             console.log(result);
             $.each(result.rows, function (index, obj) {
               //console.log(obj.doc)
+              if(obj.doc._id.startsWith("_")){
+              	return //Skipping config file like "_design/sofia-config"
+              }
               fiches[obj.doc._id] = obj.doc;
             });
             vue.fiches = fiches;
