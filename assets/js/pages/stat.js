@@ -217,7 +217,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               tooltip: {
                   valueSuffix: ' fiche(s)'
               }
-          }, "Total : "+(stats.fiche.total-stats.fiche.deleted));
+          }, "Total fiche - fermée(s) incluse(s): "+(stats.fiche.total-stats.fiche.deleted));
           var specificPieOptions = this.generateSpecificOptionPie("Affections primaires totales",true, {
             name: 'Affections',
             colorByPoint: true,
@@ -324,7 +324,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               label : {
                 text : ""+label,
                 style : {
-                  width: '80px'
+                  width: label.startsWith("Total")?'220px':'80px'
                 },
                 attr : { 'stroke': 'silver', 'stroke-width': 1,  'r': 5,'padding': 5  }, //{ 'stroke': 'silver', 'stroke-width': 1,  'r': 5,'padding': 10  }
                 position : {
