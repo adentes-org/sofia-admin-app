@@ -155,6 +155,25 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 				localStorage.SofiaDBVersion = '1';
 				localStorage.SofiaCreds = JSON.stringify(db.config.creds);
 				localStorage.SofiaFicheDBName = db.config.dbname.fiche;
+			},
+			init : function() {
+				//We load config in cache (localstorage)
+				if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion !== 'undefined' && localStorage.SofiaDBVersion === '1') { //Check if data in localStorage is compatible
+					if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
+						db.config.creds = JSON.parse(localStorage.SofiaCreds)
+					}
+					/* Not necessary sync we use it in from DB (same url)
+					if (localStorage.SofiaDBURL && localStorage.SofiaDBURL != 'undefined') { //We have url in cache
+						db.config.url = localStorage.SofiaDBURL
+					}
+					*/
+					if (localStorage.SofiaFicheDBName && localStorage.SofiaFicheDBName != 'undefined') { //We have FicheDBName in cache
+						db.config.dbname.fiche = localStorage.SofiaFicheDBName
+					}
+					db.tools.setUrl();
+				}else{
+					//db.tools.askCredential(); //ask in login
+				}
 			}
 		},
 		config : {
@@ -171,24 +190,5 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 		users : {},
 		fiches : {}
 	}
-
-	//We load config in cache (localstorage)
-	if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion !== 'undefined' && localStorage.SofiaDBVersion === '1') { //Check if data in localStorage is compatible
-		if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
-			db.config.creds = JSON.parse(localStorage.SofiaCreds)
-		}
-		/* Not necessary sync we use it in from DB (same url)
-		if (localStorage.SofiaDBURL && localStorage.SofiaDBURL != 'undefined') { //We have url in cache
-			db.config.url = localStorage.SofiaDBURL
-		}
-		*/
-		if (localStorage.SofiaFicheDBName && localStorage.SofiaFicheDBName != 'undefined') { //We have FicheDBName in cache
-			db.config.dbname.fiche = localStorage.SofiaFicheDBName
-		}
-		db.tools.setUrl();
-	}else{
-		//db.tools.askCredential(); //ask in login
-	}
-	console.log(db.config);
 	return db;
 });
