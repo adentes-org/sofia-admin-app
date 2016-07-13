@@ -1,10 +1,11 @@
-define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/team","app/pages/export","app/pages/conflict","app/pages/stat"], function($,Vue,memo,configuration,team,exp,conflict,stat) { //Load all page JS scripts
+define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/team","app/pages/export","app/pages/db","app/pages/conflict","app/pages/stat"], function($,Vue,memo,configuration,team,exp,db,conflict,stat) { //Load all page JS scripts
 	var pages =  {
 		menu: {
 			"configuration" : "Configuration",
 			"memo" : "Memo",
 			"team" : "Teams",
 			"export" : "Export",
+			"db": "Database",
 			"conflict" : "Conflict",
 			"stat": "Stats"
 		},
@@ -13,6 +14,7 @@ define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/tea
 			memo : memo,
 			team : team,
 			export : exp,
+			db : db,
 			conflict : conflict,
 			stat : stat,
 		},
@@ -33,11 +35,11 @@ define(["jquery","vue","app/pages/memo","app/pages/configuration","app/pages/tea
 			}
 	});
 
-  //Pages components
+	//Pages components
 	for (var id in pages.tabs) {
 		//console.log(pages.tabs[id].template);
 		pages.tabs[id].template = '<div class="page" id="'+id+'">' + pages.tabs[id].template + '</div>'; //Force wrap around page element
-	  pages.components[id] = Vue.extend(pages.tabs[id]);
+		pages.components[id] = Vue.extend(pages.tabs[id]);
 	}
 
 	return pages;
