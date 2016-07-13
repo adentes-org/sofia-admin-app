@@ -2,7 +2,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
   return {
   	props: ['db','config'],
 	data: function () {
-    		return { 
+    	return { 
     	  stats : {},
     	  users : [], 
     	  charts: {}, 
@@ -35,9 +35,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               tooltip: {
                   formatter: function () {
                       return '<b>' + this.series.name + '</b><br/>' +
-                          Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                          this.y;
-                          //Highcharts.numberFormat(this.y, 2);
+                          Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' + this.y;
                   }
               },
               legend: {
@@ -140,7 +138,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
              series: []
             }
           }
-  		  }
+  	}
       },
       template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
   		'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
@@ -173,12 +171,11 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             //console.log(id,this.charts[id],this.charts[id].series[0])
             if(data.series[0].data.length === 1 && typeof data.series[0].data[0].x !== "undefined"){ //This a uniq point with x position (so spline point)
             	var point = [data.series[0].data[0].x,data.series[0].data[0].y];
-            	this.charts[id].series[0].addPoint(point, true, this.charts[id].series[0].data.length>50); //Over 50 points we shift oldest
+            	this.charts[id].series[0].addPoint(point, true, this.charts[id].series[0].data.length>this.config.graph.nb_point); //Over NB point to display points we shift oldest
+            	//TODO If this.config.graph.nb_point is decrease in DB config we should remove some point.
             }else{
             	this.charts[id].series[0].setData(data.series[0].data)
             }
-
-
           }
         },
         updateCharts : function(){
