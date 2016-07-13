@@ -1,4 +1,4 @@
-define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
+define(["pouchdb"], function(PouchDB) { //Load all Db related code
 	//Base object
 	var db = {
 		isLoggued : false,
