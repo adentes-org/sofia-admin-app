@@ -2,10 +2,10 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
   return {
   	props: ['db','config'],
 	data: function () {
-    	return { 
+    	return {
     	  stats : {},
-    	  users : [], 
-    	  charts: {}, 
+    	  users : [],
+    	  charts: {},
     	  last_update : null,
           options : {
             histOptions : {
@@ -170,7 +170,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                 if(this.tick_timer){
 	                window.clearTimeout(this.tick_timer);
                 }
-                //Compare last_update to this.config.graph.timeout and now to determinate if a pull of DB is necessary. 
+                //Compare last_update to this.config.graph.timeout and now to determinate if a pull of DB is necessary.
                 var limit = new Date();
                 limit.setSeconds(limit.getSeconds() - this.config.graph.timeout);
                 if(this.last_update === null || this.last_update < limit){
@@ -183,6 +183,17 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
         chart : function(id,data){
           if(typeof this.charts[id] === "undefined"){
             this.charts[id] = Highcharts.chart(id,data);
+            console.log("options", data.options);
+            if(data.options){
+              if(data.options.label){ //{text : "" , width: '80px', style : { 'stroke': 'silver', 'stroke-width': 1,  'r': 5,'padding': 10  } , position : { align: 'right', x: 0, // offset verticalAlign: 'bottom', y: 0 // offset } }
+                var label = this.charts[id].renderer.label(data.options.label.text)
+                  .css(data.options.label.style)
+                  .attr(data.options.label.attr)
+                  .add();
+                label.align(Highcharts.extend(label.getBBox(), data.options.label.position), null, 'spacingBox');
+              }
+            }
+
           }else{
             //console.log(id,this.charts[id],this.charts[id].series[0])
             if(data.series[0].data.length === 1 && typeof data.series[0].data[0].x !== "undefined"){ //This a uniq point with x position (so spline point)
@@ -197,14 +208,14 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
         updateCharts : function(){
           var vue = this;
           var stats = vue.stats
-	  //TODO better detect change in stats to determine wich graph to update. (Maybe through a cach obj)
+	         //TODO better detect change in stats to determine wich graph to update. (Maybe through a cach obj)
           var specificGaugeOptions = this.generateSpecificOptionGauge("Fiches ouvertes totales",this.config.global.max_open, {
               name: 'Ouvertes',
               data: [stats.fiche.open],
               tooltip: {
                   valueSuffix: ' fiche(s)'
               }
-          });
+          }, "Total : "+(stats.fiche.total-stats.fiche.deleted));
           var specificPieOptions = this.generateSpecificOptionPie("Affections primaires totales",true, {
             name: 'Affections',
             colorByPoint: true,
@@ -216,7 +227,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
               }
             })
           });
-	  var specificHistOptions = this.generateSpecificOptionHist("Suivi temporel fiches ouvertes",{
+	         var specificHistOptions = this.generateSpecificOptionHist("Suivi temporel fiches ouvertes",{
                 name: 'Fiches ouvertes',
                 data: [{
                 	x:(new Date()).getTime(),
@@ -231,9 +242,9 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 
 	   $.each(this.config.ownerToShow, function (id, params) {
             	var  open = 0; //Set to zero by default
-                var  affection = {}; //Set to empty by default
+              var  affection = {}; //Set to empty by default
             	if(typeof stats.owner[id] !== "undefined"){
-            		open = stats.owner[id].open;
+            		  open = stats.owner[id].open;
               		affection = stats.owner[id].affection;
             	}
 
@@ -243,7 +254,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                   tooltip: {
                     valueSuffix: ' fiche(s)'
                   }
-                });
+                },"T : "+(stats.owner[id].total-stats.owner[id].deleted));
                 var specificPieOptions = vue.generateSpecificOptionPie("Affections",false, {
                   name: 'Affections',
                   colorByPoint: true,
@@ -255,13 +266,13 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                     }
                   })
                 });
-		var specificHistOptions = vue.generateSpecificOptionHist(" ",{
+		            var specificHistOptions = vue.generateSpecificOptionHist(" ",{
 	                name: 'Ouvertes par '+id,
 	                data: [{
 	                	x:(new Date()).getTime(),
 	                	y:open
 	                }]
-	         });
+	              });
 
                 vue.chart('container-owner-'+id,Highcharts.merge(vue.options.gaugeOptions,specificGaugeOptions))
                 vue.chart('container-affections-'+id,Highcharts.merge(vue.options.pieOptions,specificPieOptions))
@@ -298,18 +309,31 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
                 series: [serie]
           }
         },
-        generateSpecificOptionGauge : function(title,max,serie){
+        generateSpecificOptionGauge : function(title,max,serie,label){
           return {
           	title: {
           		text: title
           	},
+            options : {
+              label : {
+                text : ""+label,
+                style : {
+                  width: '80px'
+                },
+                attr : { 'stroke': 'silver', 'stroke-width': 1,  'r': 5,'padding': 5  }, //{ 'stroke': 'silver', 'stroke-width': 1,  'r': 5,'padding': 10  }
+                position : {
+                  align: 'right', x: 0, // offset
+                  verticalAlign: 'bottom', y: 5 // offset
+                }
+              }
+            },
           	yAxis: {
-          	    min: 0,
-          	    max: max,
-                    title: {
-                        text: 'open'
-                    },
-          	    plotBands: [{
+          	  min: 0,
+          	  max: max,
+              title: {
+                text: 'open'
+              },
+          	  plotBands: [{
           		from: 0,
           	 	to: max*0.6,
           		color: '#55BF3B' // green
@@ -341,7 +365,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
             //this.config.ownerToShow.$add(user, {max:5});
           }
           this.$set("config.ownerToShow", ownerToShow);
-          
+
           //this.charts = {}; //Reset //Too desctructive
           $.each(vue.charts, function (index, config) { //only reset owner grpah
           	if(index.startsWith("container-owner-")||index.startsWith("container-affections-")||index.startsWith("container-historic-")){
