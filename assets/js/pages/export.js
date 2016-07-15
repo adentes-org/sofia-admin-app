@@ -50,10 +50,10 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 				
 				doc.setFontSize(12);
 				doc.text(position.x+marg, position.y+marg*2, 'URL :');
-				doc.text(position.x+marg, position.y+marg*2+2*haut/6, "Database Name : "+vue.db.config.dbname.fiche); //TODO align dbname text to right (same for the others) 
-				doc.text(position.x+marg, position.y+marg*2+3*haut/6, "Pseudo : "+user.name); 
+				doc.text(position.x+marg, position.y+marg*2+3*haut/6, "Database Name : "+vue.db.config.dbname.fiche); //TODO align dbname text to right (same for the others) 
+				doc.text(position.x+marg, position.y+marg*2+4*haut/6, "Pseudo : "+user.name); 
 				if(vue.passwords[user._id]){
-					doc.text(position.x+marg, position.y+marg*2+4*haut/6, "Password : "+vue.passwords[user._id]);
+					doc.text(position.x+marg, position.y+marg*2+5*haut/6, "Password : "+vue.passwords[user._id]);
         			}
         			
         			url = doc.setFontSize(11).splitTextToSize(vue.db.config.url, larg-haut-marg*2)
