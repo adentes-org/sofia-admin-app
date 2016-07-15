@@ -39,6 +39,7 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 			console.log("Collecting data ..."); //TODO maybe
 			console.log("Generating PDF");
 			var doc = new jsPDF();
+			doc.setFontSize(12);
 			var position = {x:0,y:0};
 			$.each(this.users, function (i, user) {
 				position.x = (i%2==1)?marg*2+larg:marg; 
@@ -47,10 +48,10 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 				doc.rect(position.x, position.y, larg, haut); 
 				doc.rect(position.x+larg-haut, position.y, haut, haut); 
 				
-				doc.text(position.x+marg, position.y+marg, 'URL :');
-				doc.text(position.x+marg, position.y+marg+haut/5, vue.db.config.url);
-				doc.text(position.x+marg, position.y+marg+2*haut/5, "Database Name : "+vue.db.config.dbname.fiche); //TODO align dbname text to right (same for the others) 
-				doc.text(position.x+marg, position.y+marg+3*haut/5, "Peusdo : "+user.name); 
+				doc.text(position.x+marg, position.y+marg*2, 'URL :');
+				doc.text(position.x+marg, position.y+marg*2+haut/5, vue.db.config.url);
+				doc.text(position.x+marg, position.y+marg*2+2*haut/5, "Database Name : "+vue.db.config.dbname.fiche); //TODO align dbname text to right (same for the others) 
+				doc.text(position.x+marg, position.y+marg*2+3*haut/5, "Pseudo : "+user.name); 
 				if(vue.passwords[user._id]){
 					doc.text(position.x+marg, position.y+marg+4*haut/5, "Password : "+vue.passwords[user._id]);
         			}
