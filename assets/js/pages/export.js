@@ -47,7 +47,7 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 				doc.rect(position.x, position.y, larg, haut); 
 				doc.rect(position.x+larg-haut, position.y, haut, haut); 
 				
-				var elQRCode = $("#qrcode-user-"+index);
+				var elQRCode = $("#qrcode-user-"+i);
 				imgData = elQRCode.find("img[src^='data']").attr('src'); //data:image/png;base64
 				doc.addImage(imgData, 'PNG', position.x+larg-haut, position.y, haut, haut);
 				
