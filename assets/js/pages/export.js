@@ -39,7 +39,7 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 			console.log("Collecting data ..."); //TODO maybe
 			console.log("Generating PDF");
 			var doc = new jsPDF();
-			var position = {x:0:,y:0};
+			var position = {x:0,y:0};
 			$.each(this.users, function (i, user) {
 				position.x = (i%2==1)?marg*2+larg:marg; 
 				position.y += (i%2==1)?0:marg;
