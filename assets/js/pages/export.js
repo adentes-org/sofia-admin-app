@@ -47,6 +47,14 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 				doc.rect(position.x, position.y, larg, haut); 
 				doc.rect(position.x+larg-haut, position.y, haut, haut); 
 				
+				doc.text(position.x+marg, position.y+marg, 'URL :');
+				doc.text(position.x+marg, position.y+marg+haut/5, vue.db.config.url);
+				doc.text(position.x+marg, position.y+marg+2*haut/5, "Database Name : "+db.config.dbname.fiche); //TODO align dbname text to right (same for the others) 
+				doc.text(position.x+marg, position.y+marg+3*haut/5, "Peusdo : "+user.name); 
+				if(vue.passwords[user._id]){
+					doc.text(position.x+marg, position.y+marg+4*haut/5, "Password : "+vue.passwords[user._id]);
+        			}
+				
 				var elQRCode = $("#qrcode-user-"+i);
 				imgData = elQRCode.find("img[src^='data']").attr('src'); //data:image/png;base64
 				doc.addImage(imgData, 'PNG', position.x+larg-haut, position.y, haut, haut);
