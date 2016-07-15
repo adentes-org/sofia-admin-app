@@ -47,6 +47,10 @@ define(["jquery","qrcode","jspdf","app/tool"], function($,QRCode,jsPDF,tool) {
 				doc.rect(position.x, position.y, larg, haut); 
 				doc.rect(position.x+larg-haut, position.y, haut, haut); 
 				
+				var elQRCode = $("#qrcode-user-"+index);
+				imgData = elQRCode.find("img[src^='data']").attr('src'); //data:image/png;base64
+				doc.addImage(imgData, 'PNG', position.x+larg-haut, position.y, haut, haut);
+				
 				position.y += (i%2==1)?haut:0; //Saut de ligne
 			});
 			console.log("Going PDF view");
