@@ -122,7 +122,7 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 			},
 			getUrl : function(keepConfig) {
 				if(db.config.url === window.location.protocol + '//' + window.location.host ){ //If default value
-					if(!window.location.pathname.contains("/_design/")){ //If don't contains /_design/ we are not in hosted in DB
+					if(window.location.pathname.indexOf("/_design/") === -1){ //If don't contains /_design/ we are not in hosted in DB
 						db.config.url = prompt('DB URL :', db.config.url); //We ask for URL //TODO not use prompt
 					}
 				}else{ //The value has beene changed before.
