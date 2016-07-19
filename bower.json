@@ -1,0 +1,54 @@
+{
+  "name": "sofia-admin-app",
+  "description": "Suivi Opérationnel des Fiches d'Intervention par Applicatif - Admin APP",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "Antoine GIRARD",
+      "email": "antoine.girard@sapk.fr",
+      "homepage": "https://sapk.fr"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/adentes-org/sofia-admin-app.git"
+  },
+  "dependencies": {
+    "jquery": "latest",
+    "pouchdb": "latest",
+    "vue": "latest",
+    "requirejs": "latest",
+    "objectdiff": "latest",
+    
+    "qrcodejs": "latest",
+    "highcharts": "latest",
+    "jspdf": "latest",
+    "milligram": "latest",
+    
+    "trumbowyg": "latest"
+  },
+  "install": {
+    "path": "assets/lib/",
+    "sources": {
+      "jquery": "bower_components/jquery/dist/jquery.min.js",
+      "pouchdb": "bower_components/pouchdb/dist/pouchdb.min.js",
+      "vue": "bower_components/vue/dist/vue.min.js",
+      "requirejs": "bower_components/requirejs/require.js",
+      "objectdiff": "bower_components/objectdiff/objectDiff.js",
+      
+      "qrcodejs": "bower_components/qrcodejs/qrcode.min.js", 	
+      "highcharts" : [
+        "bower_components/highcharts/highcharts.js" , 	
+        "bower_components/highcharts/highcharts-more.js" ,
+        "bower_components/highcharts/modules/solid-gauge.js"
+      ],
+      "jspdf" : "bower_components/jspdf/dist/jspdf.min.js",
+      "milligram" : "bower_components/milligram/dist/milligram.min.css", 	
+      "trumbowyg" : [
+        "bower_components/trumbowyg/dist/trumbowyg.min.js", 	
+        "bower_components/trumbowyg/dist/ui/trumbowyg.min.css"
+      ]
+    }
+  },
+  "private": true
+}
