@@ -14,11 +14,14 @@ git clone https://github.com/adentes-org/sofia-admin-app.git build && cd build &
 
 echo "Start building ..."
 
-rm -Rf assets && cp -R ../assets assets #Cloning assets in it
 
-echo "Cleaning build space ..."
-shopt -s extglob
-rm -Rf !(assets|README.md|index.html) .travis.yml .editorconfig
+rm -Rf * .travis.yml .editorconfig
+cp -R ../assets ../index.html ../README.md .
+
+#rm -Rf assets && cp -R ../assets assets #Cloning assets in it
+#echo "Cleaning build space ..."
+#shopt -s extglob
+#rm -Rf !(assets|README.md|index.html) .travis.yml .editorconfig
 
 echo "Finished build !"
 

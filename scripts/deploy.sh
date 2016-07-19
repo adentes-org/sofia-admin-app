@@ -3,7 +3,7 @@
 
 set -e # Exit with nonzero exit code if anything fails
 
-SOURCE_BRANCH="enhance-27" #TODO switch to master
+SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
 COMMIT_AUTHOR_EMAIL="travis@nobody.fr"
 KEYFILE="$TRAVIS_BUILD_DIR/keys/deploy_key"
