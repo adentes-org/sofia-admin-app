@@ -16,15 +16,14 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]
     exit 0
 fi
 
-git config user.name "Travis CI"
-git config user.email "$COMMIT_AUTHOR_EMAIL"
-
-cd build
 echo "Getting in build space ..."
 
+cd build
 # Commit the "changes", i.e. the new version.
 # The delta will show diffs between new and old versions.
 git add --all .
+git config user.name "Travis CI"
+git config user.email "$COMMIT_AUTHOR_EMAIL"
 git commit -m "Deploy to GitHub Pages: ${TRAVIS_COMMIT}" || echo "nothing to commit"
 
 eval `ssh-agent -s`
