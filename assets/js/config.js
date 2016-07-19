@@ -5,9 +5,9 @@ define([], function() {
   	},
   	ownerToShow : {}, //Default config,
   	graph : {
-  		tick : 6, //Time in seconds between point (without event)
-  		timeout : 60, //Time in seconds between forced updated (if over trigge update from db)
-  		nb_point : 60*10, //Nb point to graph nb_point*tick willl give you a rough estimation of global time of graph (force update or will shorter time between 2 points) Ex 60*10*6 = 60 minutes = 1hour
+  		tick : 10, //Time in seconds between point (without event)
+  		timeout : 3*60, //Time in seconds between forced updated (if over trigger update from db) //More a fail safe than a utility
+  		nb_point : 60*6, //Nb point to graph nb_point*tick willl give you a rough estimation of global time of graph (force update or will shorter time between 2 points) Ex 60*10*6 = 60 minutes = 1hour
   	},
   	affectionColor : {
           "undefined" : "#B09F91",
