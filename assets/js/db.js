@@ -1,4 +1,4 @@
-define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
+define(["pouchdb"], function(PouchDB) { //Load all Db related code
 	//Base object
 	var db = {
 		isLoggued : false,
@@ -57,7 +57,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 			},
 			createFicheDB : function(dbname) {
 				db.config.dbname.fiche = dbname;
-				urls = db.tools.getUrl();
+				urls = db.tools.getUrl(true);
 
 				db.fiches = new PouchDB(urls.fiche, {
 					auth : db.config.creds,
@@ -104,7 +104,7 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 								//Create DB
 								return db.tools.createFicheDB(db.config.dbname.fiche);
 							} else {
-								//ask for another name
+								//ask for another name and url if needed
 								db.tools.setUrl(); //re-generate PouchDb object (only re-ask for DB fiche name)
 								return db.tools.login(params);
 							}
@@ -120,7 +120,17 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 				})
 				
 			},
-			getUrl : function() {
+			getUrl : function(keepConfig) {
+				if(db.config.url === window.location.protocol + '//' + window.location.host ){ //If default value
+					if(window.location.pathname.indexOf("/_design/") === -1){ //If don't contains /_design/ we are not in hosted in DB
+						db.config.url = prompt('DB URL :', db.config.url); //We ask for URL //TODO not use prompt
+					}
+				}else{ //The value has beene changed before.
+					if(!keepConfig){ //If we are ask to keep config (like for creation of DB) don't go there
+						db.config.url = prompt('DB URL :', db.config.url); //We ask for URL //TODO not use prompt
+					}	
+				}
+				//TODO check if it a good couchdb 
 				return {
 					user : db.config.url + '/' + db.config.dbname.user,
 					fiche : db.config.url + '/' + db.config.dbname.fiche
@@ -134,13 +144,11 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 					ajax: {timeout: 20000},
 					skip_setup: true
 				});
-				//*
 				db.fiches = new PouchDB(urls.fiche, {
 					auth : db.config.creds,
 					ajax: {timeout: 20000},
 					skip_setup: true
 				});
-				//*/
 			},
 			askCredential : function() {
 				//TODO don't use prompt
@@ -154,7 +162,27 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 			bckpConfig : function() {
 				localStorage.SofiaDBVersion = '1';
 				localStorage.SofiaCreds = JSON.stringify(db.config.creds);
+				localStorage.SofiaDBURL = db.config.url;
 				localStorage.SofiaFicheDBName = db.config.dbname.fiche;
+			},
+			init : function() {
+				//We load config in cache (localstorage)
+				if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion !== 'undefined' && localStorage.SofiaDBVersion === '1') { //Check if data in localStorage is compatible
+					if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
+						db.config.creds = JSON.parse(localStorage.SofiaCreds)
+					}
+					
+					if (localStorage.SofiaDBURL && localStorage.SofiaDBURL != 'undefined') { //We have url in cache
+						db.config.url = localStorage.SofiaDBURL
+					}
+					
+					if (localStorage.SofiaFicheDBName && localStorage.SofiaFicheDBName != 'undefined') { //We have FicheDBName in cache
+						db.config.dbname.fiche = localStorage.SofiaFicheDBName
+					}
+					db.tools.setUrl();
+				}else{
+					//db.tools.askCredential(); //ask in login
+				}
 			}
 		},
 		config : {
@@ -171,24 +199,5 @@ define(["pouchdb"], function(PouchDB) { //Load all page JS scripts
 		users : {},
 		fiches : {}
 	}
-
-	//We load config in cache (localstorage)
-	if (localStorage.SofiaDBVersion && localStorage.SofiaDBVersion !== 'undefined' && localStorage.SofiaDBVersion === '1') { //Check if data in localStorage is compatible
-		if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
-			db.config.creds = JSON.parse(localStorage.SofiaCreds)
-		}
-		/* Not necessary sync we use it in from DB (same url)
-		if (localStorage.SofiaDBURL && localStorage.SofiaDBURL != 'undefined') { //We have url in cache
-			db.config.url = localStorage.SofiaDBURL
-		}
-		*/
-		if (localStorage.SofiaFicheDBName && localStorage.SofiaFicheDBName != 'undefined') { //We have FicheDBName in cache
-			db.config.dbname.fiche = localStorage.SofiaFicheDBName
-		}
-		db.tools.setUrl();
-	}else{
-		//db.tools.askCredential(); //ask in login
-	}
-	console.log(db.config);
 	return db;
 });
