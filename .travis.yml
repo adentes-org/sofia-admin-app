@@ -5,15 +5,15 @@ node_js:
 cache:
   directories:
   - keys
+  - node_modules
   - bower_components
-  
+
 before_install:
 - npm install --quiet -g npm bower-installer
-- chmod +x ./scripts/*.sh 
 
 script:
 - bower-installer
-- ./scripts/build.sh 
+- ./scripts/build.sh
 
 after_success:
 - ./scripts/deploy.sh
