@@ -8,10 +8,6 @@ TARGET_BRANCH="gh-pages"
 COMMIT_AUTHOR_EMAIL="travis@nobody.fr"
 KEYFILE="$TRAVIS_BUILD_DIR/keys/deploy_key"
 
-#Generate a key in needed that will be store in cache (and to be haded to github)
-if [ ! -f $KEYFILE ]; then
-    ssh-keygen -t rsa -b 4096 -C "$COMMIT_AUTHOR_EMAIL"  -N "$TMPPASS" -f $KEYFILE
-fi
 cat "$KEYFILE.pub"
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
@@ -26,8 +22,8 @@ git config user.email "$COMMIT_AUTHOR_EMAIL"
 
 echo "Cleaning build space ..."
 shopt -s extglob
-rm -Rf !(dist) !(README.md)
-ls -lah dist
+rm -Rf !(dist) !(assets) !(README.md) .travis.yml .editorconfig
+ls -lah *
 
 #TODO push dist folder if any changed detected
 #checkout do gh-pages, commit and push
