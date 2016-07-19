@@ -10,10 +10,10 @@ requirejs.config({
       //jquery: '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min',
       trumbowyg: 'lib/trumbowyg/trumbowyg.min',
 
-      vue: 'lib/vuejs/vue.min',
+      vue: 'lib/vue/vue.min',
       pouchdb: 'lib/pouchdb/pouchdb.min',
 
-      qrcode: 'lib/qrcode/qrcode.min',
+      qrcode: 'lib/qrcodejs/qrcode.min',
       jspdf: 'lib/jspdf/jspdf.min',
       objectdiff: 'lib/objectdiff/objectDiff',
       highcharts: 'lib/highcharts/highcharts',
