@@ -44,7 +44,7 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 				      	users : [],
 				      	config : {
 				      		global : {
-				      			max_open : 10	
+				      			max_open : 10
 				      		},
 				      		ownerToShow : []
 				      	},
@@ -64,7 +64,7 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 					ajax: {timeout: 20000},
 					skip_setup: false
 				}); //Create DB
-				
+
 				//Apply secu
 				db.tools.createSecurity(db.fiches,dbname).then(function (result) {
 				  return db.tools.createConfig(db.fiches)
@@ -80,7 +80,7 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 				if(typeof params === "undefined" || typeof params.isStatOnly === "undefined" ){
 					params = {isStatOnly: false};
 				}
-				
+
 				var d = (params.isStatOnly)?'fiches':'users';
 				if(typeof db[d].info !== "function"){
 					db.tools.askCredential();
@@ -108,7 +108,7 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 								db.tools.setUrl(); //re-generate PouchDb object (only re-ask for DB fiche name)
 								return db.tools.login(params);
 							}
-						})	
+						})
 					}else{
 						return info; //We are in stat only mode
 					}
@@ -118,19 +118,19 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 					db.tools.askCredential();
 					return db.tools.login(params);
 				})
-				
+
 			},
 			getUrl : function(keepConfig) {
-				if(db.config.url === window.location.protocol + '//' + window.location.host ){ //If default value
-					if(window.location.pathname.indexOf("/_design/") === -1){ //If don't contains /_design/ we are not in hosted in DB
+				if(!keepConfig){ //If we are ask to keep config (like for creation of DB) don't go there
+					if(db.config.url === window.location.protocol + '//' + window.location.host ){ //If default value
+						if(window.location.pathname.indexOf("/_design/") === -1){ //If don't contains /_design/ we are not in hosted in DB
+							db.config.url = prompt('DB URL :', db.config.url); //We ask for URL //TODO not use prompt
+						}
+					}else{ //The value has been changed before. but we re-ask since !keepConfig
 						db.config.url = prompt('DB URL :', db.config.url); //We ask for URL //TODO not use prompt
 					}
-				}else{ //The value has beene changed before.
-					if(!keepConfig){ //If we are ask to keep config (like for creation of DB) don't go there
-						db.config.url = prompt('DB URL :', db.config.url); //We ask for URL //TODO not use prompt
-					}	
 				}
-				//TODO check if it a good couchdb 
+				//TODO check if it a good couchdb
 				return {
 					user : db.config.url + '/' + db.config.dbname.user,
 					fiche : db.config.url + '/' + db.config.dbname.fiche
@@ -171,11 +171,11 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 					if (localStorage.SofiaCreds && localStorage.SofiaCreds != 'undefined') { //We have credentials in cache
 						db.config.creds = JSON.parse(localStorage.SofiaCreds)
 					}
-					
+
 					if (localStorage.SofiaDBURL && localStorage.SofiaDBURL != 'undefined') { //We have url in cache
 						db.config.url = localStorage.SofiaDBURL
 					}
-					
+
 					if (localStorage.SofiaFicheDBName && localStorage.SofiaFicheDBName != 'undefined') { //We have FicheDBName in cache
 						db.config.dbname.fiche = localStorage.SofiaFicheDBName
 					}
