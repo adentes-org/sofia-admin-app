@@ -610,6 +610,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 						
 						//});
 					}
+					//Only keep last 10
+					logs.find(">div.log").slice(10).remove();
 				}
 			},
 			events: {
