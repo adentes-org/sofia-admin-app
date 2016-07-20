@@ -20,9 +20,11 @@ define(["pouchdb"], function(PouchDB) { //Load all Db related code
 				  db.tools.monitor(data,onchange);
 				}).on('error', function (err) {
 				  onchange(err);
-				  db.tools.monitor(data,onchange);
+				  window.setTimeout(function(){db.tools.monitor(data,onchange)},5000); //Debounce 5s
 				  console.log(err);
 				});
+				onchange("monitor-started");
+				//TODO keep monitor across session and check if is monitored before restarting
 			},
 			createSecurity : function(db,dbname) {
 				return db.request({
