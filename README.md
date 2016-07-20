@@ -5,4 +5,6 @@ Admin interface use to administer the SOFIA database
 
 ### Credits
 
-“[Sliders](https://thenounproject.com/search/?q=configuration&i=541441)” icon by Guilhem from the [Noun Project](http://thenounproject.com/).
+“[Sliders](https://thenounproject.com/term/sliders/541441)” icon by Guilhem from the [Noun Project](http://thenounproject.com/).
+
+“[Edit File](https://thenounproject.com/term/edit-file/180475)” icon by BenPixels from the [Noun Project](http://thenounproject.com/).
