@@ -566,7 +566,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 							logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
-								        '<img src="http://pipsum.com/50x50.jpg" alt="" width="50" height="50">'+
+								        '<img src="assets/img/doc-edit.svg" alt="doc-edit" width="50" height="50">'+
 								      '</a>'+
 								      '<div class="log-body">'+
 								       '<div class="text">'+
