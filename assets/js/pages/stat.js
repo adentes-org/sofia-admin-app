@@ -578,6 +578,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 					} else {
 						//$.each(change.changes, function( index, doc ) {
 						vue.getStats();
+						var event = change.doc.events[change.doc.events.length-1];
 						logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
@@ -585,7 +586,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 								      '</a>'+
 								      '<div class="log-body">'+
 								       '<div class="text">'+
-								          '<p>'+JSON.stringify(change.doc)+'</p>'+
+								          '<p>'+JSON.stringify(event)+'</p>'+
 								        '</div>'+
 								      '</div>'+
 								'</div>'
