@@ -7,7 +7,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 				users : [],
 				charts: {},
 				last_update : null,
-					options : {
+				errors : [],
+				options : {
 						histOptions : {
 							chart: {
 									type: 'spline',
@@ -19,7 +20,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 							},
 							xAxis: {
 									type: 'datetime',
-									tickPixelInterval: 150
+									tickPixelInterval: 150,
+									plotBands: []
 							},
 							yAxis: {
 									min:0,
@@ -140,7 +142,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 						 series: []
 						}
 					}
-		}
+				}
 			},
 			template: '<button class="button-primary float-right" @click="forceUpdt">Mise à jour forcée</button>'+
 			'<h2>Stat <i style="font-size: 50%;"">(dernière mise à jour : {{last_update.toLocaleString()}})</i></h2>'+
@@ -166,26 +168,46 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 			computed: {
 			},
 			methods:{
+				addBand : function(color,from,to,label){
+					var vue = this;
+					$.each(vue.charts, function (index, config) { //only updt historic grpah
+						if(index === "container-historic"||index.startsWith("container-historic-")){
+							vue.charts[index].xAxis[0].addPlotBand({
+									from: from,
+									to: to,
+									color: color,
+									label: label
+							});
+						}
+					});
+				},
 				tick : function(){ //Generate one point base on old value or new one if timeout is over in order to have a constant graph animation.
 								//Call by timer or GetStat to update graph
-								console.log("tick");
+								var vue = this;
+								//console.log("tick");
 								if(this.tick_timer){
 									window.clearTimeout(this.tick_timer);
 								}
 								//Compare last_update to this.config.graph.timeout and now to determinate if a pull of DB is necessary.
 								var limit = new Date();
 								limit.setSeconds(limit.getSeconds() - this.config.graph.timeout);
-								if(this.last_update === null || this.last_update < limit){
+								if(this.last_update === null || (this.last_update < limit && (vue.errors.length === 0 || vue.errors[vue.errors.length-1] < limit) )){
+									console.log("tick","getStats");
 									this.getStats(); //This will trigger again tick after getting data and updating last_update
 								}else{
-								this.updateCharts(); //Add poitn base on curretn stat
+									console.log("tick","updateCharts");
+									this.updateCharts(); //Add point base on curretn stat
+									if(!(vue.errors.length === 0 || vue.errors[vue.errors.length-1] < vue.last_update)){
+										//Update last plotband error since we have a error superior at last_update
+										vue.errors.push(new Date()); //Add to array pf timestamps error
+										vue.addBand('#FFB6B8',vue.errors[vue.errors.length-2],vue.errors[vue.errors.length-1])
+									}
 								}
 								this.tick_timer = window.setTimeout(this.tick,this.config.graph.tick*1000)
 				},
 				chart : function(id,data){
 					if(typeof this.charts[id] === "undefined"){
 						this.charts[id] = Highcharts.chart(id,data);
-						console.log("options", data.options);
 						if(data.options){
 							if(data.options.label){ //{text : "" , width: '80px', style : { 'stroke': 'silver', 'stroke-width': 1,	'r': 5,'padding': 10	} , position : { align: 'right', x: 0, // offset verticalAlign: 'bottom', y: 0 // offset } }
 								var label = this.charts[id].renderer.label(data.options.label.text)
@@ -514,10 +536,10 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 							}
 						});
 						console.log(stats);
-							vue.stats = stats;
-							vue.last_update = new Date();
-							vue.tick(); //updateCharts() and clear timer of graphing constant point
-					});
+						vue.stats = stats;
+						vue.last_update = new Date();
+						vue.tick(); //updateCharts() and clear timer of graphing constant point
+					}); //TODO catch errors
 				}, 750)
 			},
 			events: {
@@ -530,11 +552,32 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 					this.getConfig().then(this.getStats);
 				},
 				onchange : function(change){
-						console.log(change)
-						if(change.id && change.id === "_design/sofia-config"){
-							this.getConfig().then(this.getStats);
+						var vue = this;
+						if( typeof change === "object" &&  typeof change.changes  === "undefined" && typeof change.status === "number"){ //This is a error (obj and no change + status)
+							//TODO filter know erros
+							console.log("error detected",change)
+							vue.errors = vue.errors.slice(-5) //only keep last 5 value
+							if(vue.errors.length === 0 || vue.errors[vue.errors.length-1] < vue.last_update){
+								vue.errors.push(new Date()); //Add to array pf timestamps error
+								vue.addBand('#EEE',vue.last_update,vue.errors[vue.errors.length-1],{
+											text: 'Possible time with missed update',
+											style: {
+													color: '#999'
+											},
+											y: 30
+								});
+							}else{
+								vue.errors.push(new Date()); //Add to array pf timestamps error
+								vue.addBand('#FFB6B8',vue.errors[vue.errors.length-2],vue.errors[vue.errors.length-1]);
+							}
+
 						}else{
-							this.getStats();
+							console.log("updt detected",change)
+							if(change.id && change.id === "_design/sofia-config"){
+								this.getConfig().then(this.getStats);
+							}else{
+								this.getStats();
+							}
 						}
 				}
 			}
