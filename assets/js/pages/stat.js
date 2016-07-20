@@ -560,37 +560,37 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 							      '</div>'+
 							'</div>'
 						);
-					}else if(change === "monitor-started"){
+					}else if(typeof change === "string" && change === "monitor-started"){
 						logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
-								        '<img src="" alt="information" width="50" height="50">'+
+								        '<img src="assets/img/info.svg" alt="information" width="50" height="50">'+
 								      '</a>'+
 								      '<div class="log-body">'+
 								       '<div class="text">'+
 								          '<p>Réinitialisation de la synchronisation avec la DB</p>'+
 								        '</div>'+
+								        '<p class="attribution"> the '+Date().toLocaleString()+'</p>'+
 								      '</div>'+
-								'</div>' //TODO use date form histo
+								'</div>'
 						);
-						
-					}else{
+						vue.getStats();
+					} else {
 						//$.each(change.changes, function( index, doc ) {
-						var event = change.doc.events[change.doc.events-1]
-							logs.prepend(
+						var event = change.doc.events[change.doc.events-1];
+						logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
 								        '<img src="assets/img/doc-edit.svg" alt="doc-edit" width="50" height="50">'+
 								      '</a>'+
 								      '<div class="log-body">'+
 								       '<div class="text">'+
-								          //'<p>Changement détecté : '+JSON.stringify(change.doc)+'</p>'+
 								          '<p>'+event.message+'</p>'+
 								        '</div>'+
 								        '<p class="attribution">by <a href="#non">'+event.user+'</a> the '+Date(event.timestamp).toLocaleString()+'</p>'+
 								      '</div>'+
 								'</div>' //TODO use event.action to show different img
-							);
+						);
 						//});
 						vue.getStats();
 					}
