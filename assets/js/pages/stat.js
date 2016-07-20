@@ -547,23 +547,23 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 					var logs = $("#global-log");
 					if(change.id && change.id === "_design/sofia-config"){
 						vue.getConfig().then(vue.getStats);
-						logs.append(
+						logs.prepend(
 							'<div class="log">'+
 							      '<a class="log-img" href="#non">'+
 							        '<img src="assets/img/config.svg" alt="config" width="50" height="50">'+
 							      '</a>'+
 							      '<div class="log-body">'+
 							       '<div class="text">'+
-							          '<p>Configuration mise à jour '+JSON.stringify(change)+'</p>'+
+							          '<p>Configuration mise à jour.</p>'+
 							        '</div>'+
-							        '<p class="attribution">by <a href="#non">USER</a> at '+Date().toLocaleString()+'</p>'+
+							        '<p class="attribution">by a admin the '+Date().toLocaleString()+'</p>'+
 							      '</div>'+
 							'</div>'
 						);
 					}else{
 						//$.each(change.changes, function( index, doc ) {
 							//logs.append('<li>Changement détecté : '+JSON.stringify(doc)+'</li>');
-							logs.append(
+							logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
 								        '<img src="http://pipsum.com/50x50.jpg" alt="" width="50" height="50">'+
@@ -573,7 +573,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 								          //'<p>Changement détecté : '+JSON.stringify(doc)+'</p>'+
 								          '<p>Changement détecté : '+JSON.stringify(change)+'</p>'+
 								        '</div>'+
-								        '<p class="attribution">by <a href="#non">USER</a> at '+Date().toLocaleString()+'</p>'+
+								        '<p class="attribution">by <a href="#non">USER</a> the '+Date().toLocaleString()+'</p>'+
 								      '</div>'+
 								'</div>' //TODO use date form histo
 							);
