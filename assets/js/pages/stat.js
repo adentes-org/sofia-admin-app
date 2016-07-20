@@ -600,8 +600,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 								        '<img src="assets/img/doc-edit.svg" alt="doc-edit" width="50" height="50">'+
 								      '</a>'+
 								      '<div class="log-body">'+
-								       '<div class="text">'+
-								          '<p>'+event.message+'</p>'+
+								       '<div class="text" data-fiche-id="'+change.doc._id+'">'+
+								          '<p>'+event.message+' ('+change.doc.uid+')</p>'+
 								        '</div>'+
 								        '<p class="attribution">by <a href="#non">'+event.user+'</a> the '+(new Date(event.timestamp)).toLocaleString()+'</p>'+
 								      '</div>'+
