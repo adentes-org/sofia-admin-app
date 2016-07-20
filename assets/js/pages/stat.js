@@ -157,6 +157,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 									'<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
 									'<div id="container-affection" style="width: 65%; height: 400px; display: inline-block"></div>'+
 								'</div>'+
+								'<ul id="global-log"></ul>'+
 								'<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
 								'<div id="owners-graph">'+
 									'<div v-for="(owner, config) in config.ownerToShow">'+
@@ -540,7 +541,20 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 						vue.last_update = new Date();
 						vue.tick(); //updateCharts() and clear timer of graphing constant point
 					}); //TODO catch errors
-				}, 750)
+				}, 750),
+				parseChange : function(change){
+					var vue = this;
+					var ul = $("ul#global-log");
+					if(change.id && change.id === "_design/sofia-config"){
+						vue.getConfig().then(vue.getStats);
+						ul.append('<li>Configuration mise à jour</li>');
+					}else{
+						$.each(change.changes, function( index, doc ) {
+							ul.append('<li>Changement détecté : '+JSON.stringify(doc)+'</li>');
+						});
+						vue.getStats();
+					}
+				}
 			},
 			events: {
 				onload : function(){
@@ -573,11 +587,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 
 						}else{
 							console.log("updt detected",change)
-							if(change.id && change.id === "_design/sofia-config"){
-								this.getConfig().then(this.getStats);
-							}else{
-								this.getStats();
-							}
+							this.parseChange(change);
 						}
 				}
 			}
