@@ -157,7 +157,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 									'<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
 									'<div id="container-affection" style="width: 65%; height: 400px; display: inline-block"></div>'+
 								'</div>'+
-								'<ul id="global-log"></ul>'+
+								'<div id="global-log" class="logs"></div>'+
 								'<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
 								'<div id="owners-graph">'+
 									'<div v-for="(owner, config) in config.ownerToShow">'+
@@ -544,13 +544,38 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 				}, 750),
 				parseChange : function(change){
 					var vue = this;
-					var ul = $("ul#global-log");
+					var logs = $("#global-log");
 					if(change.id && change.id === "_design/sofia-config"){
 						vue.getConfig().then(vue.getStats);
-						ul.append('<li>Configuration mise à jour</li>');
+						logs.append(
+							'<div class="log">'+
+							      '<a class="log-img" href="#non">'+
+							        '<img src="http://pipsum.com/50x50.jpg" alt="" width="50" height="50">'+
+							      '</a>'+
+							      '<div class="log-body">'+
+							       '<div class="text">'+
+							          '<p>Configuration mise à jour</p>'+
+							        '</div>'+
+							        '<p class="attribution">by <a href="#non">USER</a> at TIMESTAMP</p>'+
+							      '</div>'+
+							'</div>'
+						);
 					}else{
 						$.each(change.changes, function( index, doc ) {
-							ul.append('<li>Changement détecté : '+JSON.stringify(doc)+'</li>');
+							//logs.append('<li>Changement détecté : '+JSON.stringify(doc)+'</li>');
+							logs.append(
+								'<div class="log">'+
+								      '<a class="log-img" href="#non">'+
+								        '<img src="http://pipsum.com/50x50.jpg" alt="" width="50" height="50">'+
+								      '</a>'+
+								      '<div class="log-body">'+
+								       '<div class="text">'+
+								          '<p>Changement détecté : '+JSON.stringify(doc)+'</p>'+
+								        '</div>'+
+								        '<p class="attribution">by <a href="#non">USER</a> at TIMESTAMP</p>'+
+								      '</div>'+
+								'</div>'
+							);
 						});
 						vue.getStats();
 					}
