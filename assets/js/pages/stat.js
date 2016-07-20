@@ -556,12 +556,12 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 							       '<div class="text">'+
 							          '<p>Configuration mise à jour '+JSON.stringify(change)+'</p>'+
 							        '</div>'+
-							        '<p class="attribution">by <a href="#non">USER</a> at TIMESTAMP</p>'+
+							        '<p class="attribution">by <a href="#non">USER</a> at '+Date().toLocaleString()+'</p>'+
 							      '</div>'+
 							'</div>'
 						);
 					}else{
-						$.each(change.changes, function( index, doc ) {
+						//$.each(change.changes, function( index, doc ) {
 							//logs.append('<li>Changement détecté : '+JSON.stringify(doc)+'</li>');
 							logs.append(
 								'<div class="log">'+
@@ -570,13 +570,14 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 								      '</a>'+
 								      '<div class="log-body">'+
 								       '<div class="text">'+
-								          '<p>Changement détecté : '+JSON.stringify(doc)+'</p>'+
+								          //'<p>Changement détecté : '+JSON.stringify(doc)+'</p>'+
+								          '<p>Changement détecté : '+JSON.stringify(change)+'</p>'+
 								        '</div>'+
-								        '<p class="attribution">by <a href="#non">USER</a> at TIMESTAMP</p>'+
+								        '<p class="attribution">by <a href="#non">USER</a> at '+Date().toLocaleString()+'</p>'+
 								      '</div>'+
-								'</div>'
+								'</div>' //TODO use date form histo
 							);
-						});
+						//});
 						vue.getStats();
 					}
 				}
