@@ -114,6 +114,7 @@ del.diff span{
 
 .logs {
 	margin: 1em;
+        padding: 1em;
 	border: 1px #CCC solid;
 	border-radius: 10px;
 }
