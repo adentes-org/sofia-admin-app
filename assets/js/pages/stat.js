@@ -157,7 +157,6 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 									'<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
 									'<div id="container-affection" style="width: 65%; height: 400px; display: inline-block"></div>'+
 								'</div>'+
-								'<h4>Logs :</h4><div id="global-log" class="logs"></div>'+
 								'<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
 								'<div id="owners-graph">'+
 									'<div v-for="(owner, config) in config.ownerToShow">'+
@@ -165,7 +164,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 										 '<div id="container-affections-{{owner}}" style="width: 25%; height: 200px; display: inline-block"></div>'+
 										 '<div id="container-historic-{{owner}}" style="width: 50%; height: 200px; display: inline-block"></div>'+
 									'</div>'+
-								'</div>',
+								'</div>'+
+								'<h4>Logs :</h4><div id="global-log" class="logs"></div>',
 			computed: {
 			},
 			methods:{
@@ -550,11 +550,11 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 						logs.append(
 							'<div class="log">'+
 							      '<a class="log-img" href="#non">'+
-							        '<img src="http://pipsum.com/50x50.jpg" alt="" width="50" height="50">'+
+							        '<img src="assets/img/config.svg" alt="config" width="50" height="50">'+
 							      '</a>'+
 							      '<div class="log-body">'+
 							       '<div class="text">'+
-							          '<p>Configuration mise à jour</p>'+
+							          '<p>Configuration mise à jour '+JSON.stringify(change)+'</p>'+
 							        '</div>'+
 							        '<p class="attribution">by <a href="#non">USER</a> at TIMESTAMP</p>'+
 							      '</div>'+
