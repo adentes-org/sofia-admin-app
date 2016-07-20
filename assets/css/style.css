@@ -111,6 +111,13 @@ del.diff span{
 }
 
 /* logs style based on : http://codepen.io/chriscoyier/pen/wauoL */
+
+.logs {
+	margin: 1em;
+	border: 1px #CCC solid;
+	border-radius: 10px;
+}
+
 .logs p {
     margin: 0 0 1em;
 }
