@@ -157,7 +157,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 									'<div id="container-open" style="width: 35%; height: 400px; display: inline-block"></div>'+
 									'<div id="container-affection" style="width: 65%; height: 400px; display: inline-block"></div>'+
 								'</div>'+
-								'<div id="global-log" class="logs"></div>'+
+								'<h4>Logs :</h4><div id="global-log" class="logs"></div>'+
 								'<br/><div id="container-historic" style="width: 100%; height: 400px; display: inline-block"></div><br/><hr>'+
 								'<div id="owners-graph">'+
 									'<div v-for="(owner, config) in config.ownerToShow">'+
