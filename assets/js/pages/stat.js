@@ -579,6 +579,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 						//$.each(change.changes, function( index, doc ) {
 						vue.getStats();
 						var event = change.doc.events[change.doc.events.length-1];
+						/*
 						logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
@@ -591,8 +592,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 								      '</div>'+
 								'</div>'
 						);
-						/*
-						var event = change.doc.events[change.doc.events-1];
+						*/
+						
 						logs.prepend(
 								'<div class="log">'+
 								      '<a class="log-img" href="#non">'+
@@ -602,11 +603,11 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 								       '<div class="text">'+
 								          '<p>'+event.message+'</p>'+
 								        '</div>'+
-								        '<p class="attribution">by <a href="#non">'+event.user+'</a> the '+(new Date(parseInt(event.timestamp))).toLocaleString()+'</p>'+
+								        '<p class="attribution">by <a href="#non">'+event.user+'</a> the '+(new Date(event.timestamp)).toLocaleString()+'</p>'+
 								      '</div>'+
 								'</div>' //TODO use event.action to show different img
 						);
-						*/
+						
 						//});
 					}
 				}
