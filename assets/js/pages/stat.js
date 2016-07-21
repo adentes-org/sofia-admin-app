@@ -164,7 +164,8 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 										 '<div id="container-affections-{{owner}}" style="width: 25%; height: 200px; display: inline-block"></div>'+
 										 '<div id="container-historic-{{owner}}" style="width: 50%; height: 200px; display: inline-block"></div>'+
 									'</div>'+
-								'</div>',
+								'</div>'+
+								'<h4>Logs :</h4><div id="global-log" class="logs"></div>',
 			computed: {
 			},
 			methods:{
@@ -540,7 +541,78 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 						vue.last_update = new Date();
 						vue.tick(); //updateCharts() and clear timer of graphing constant point
 					}); //TODO catch errors
-				}, 750)
+				}, 750),
+				parseChange : function(change){
+					var vue = this;
+					var logs = $("#global-log");
+					if(change.id && change.id === "_design/sofia-config"){
+						vue.getConfig().then(vue.getStats);
+						logs.prepend(
+							'<div class="log">'+
+							      '<a class="log-img" href="#non">'+
+							        '<img src="assets/img/config.svg" alt="config" width="50" height="50">'+
+							      '</a>'+
+							      '<div class="log-body">'+
+							       '<div class="text">'+
+							          '<p>Configuration mise à jour.</p>'+
+							        '</div>'+
+							        '<p class="attribution">by a admin the '+Date().toLocaleString()+'</p>'+
+							      '</div>'+
+							'</div>'
+						);
+					}else if(typeof change === "string" && change === "monitor-started"){
+						logs.prepend(
+								'<div class="log">'+
+								      '<a class="log-img" href="#non">'+
+								        '<img src="assets/img/info.svg" alt="information" width="50" height="50">'+
+								      '</a>'+
+								      '<div class="log-body">'+
+								       '<div class="text">'+
+								          '<p>Réinitialisation de la synchronisation avec la DB</p>'+
+								        '</div>'+
+								        '<p class="attribution"> the '+Date().toLocaleString()+'</p>'+
+								      '</div>'+
+								'</div>'
+						);
+						vue.getStats();
+					} else {
+						//$.each(change.changes, function( index, doc ) {
+						vue.getStats();
+						var event = change.doc.events[change.doc.events.length-1];
+						/*
+						logs.prepend(
+								'<div class="log">'+
+								      '<a class="log-img" href="#non">'+
+								        '<img src="assets/img/doc-edit.svg" alt="doc-edit" width="50" height="50">'+
+								      '</a>'+
+								      '<div class="log-body">'+
+								       '<div class="text">'+
+								          '<p>'+JSON.stringify(event)+'</p>'+
+								        '</div>'+
+								      '</div>'+
+								'</div>'
+						);
+						*/
+						
+						logs.prepend(
+								'<div class="log">'+
+								      '<a class="log-img" href="#non">'+
+								        '<img src="assets/img/doc-edit.svg" alt="doc-edit" width="50" height="50">'+
+								      '</a>'+
+								      '<div class="log-body">'+
+								       '<div class="text" data-fiche-id="'+change.doc._id+'">'+
+								          '<p>'+event.message+' ('+change.doc.uid+')</p>'+
+								        '</div>'+
+								        '<p class="attribution">by <a href="#non">'+event.user+'</a> the '+(new Date(event.timestamp)).toLocaleString()+'</p>'+
+								      '</div>'+
+								'</div>' //TODO use event.action to show different img
+						);
+						
+						//});
+					}
+					//Only keep last 10
+					logs.find(">div.log").slice(10).remove();
+				}
 			},
 			events: {
 				onload : function(){
@@ -573,11 +645,7 @@ define(['jquery',"app/tool",'highcharts','highcharts-more','highcharts-solid-gau
 
 						}else{
 							console.log("updt detected",change)
-							if(change.id && change.id === "_design/sofia-config"){
-								this.getConfig().then(this.getStats);
-							}else{
-								this.getStats();
-							}
+							this.parseChange(change);
 						}
 				}
 			}
