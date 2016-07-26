@@ -10,7 +10,16 @@ define(["jquery"], function($) {
                 	viewExistence : {
                 		description : "Les indexes sont présent ?",
                 		validator : function(db){
-                			this.result = true;
+                			var test = this;
+                			
+                			//db.query('index', { include_docs: false }).then({
+                			db.get('_design/fiche').then({
+                				//TODO test every veiw
+                				test.result = true;	
+                			}).catch(function (err) {
+                				test.result = false;	
+						console.log(err);
+					});
                 		},
                 		result : false
                 	}
