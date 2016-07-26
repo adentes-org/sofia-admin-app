@@ -66,7 +66,7 @@ define(["jquery"], function($) {
 
                 // save the design doc
                 vue.db.fiches.put(index).catch(function(err) {
-                    if (err.name !== 'conflict') {
+                    if (err.name === 'conflict') {
                         // if doc already exists erase and retry
                         return vue.db.fiches.get(index._id).then(function(doc) {
                             return vue.db.fiches.remove(doc);
