@@ -1,4 +1,4 @@
-/* global define */
+/* global define, emit */
 define(["jquery"], function($) {
     return {
         props: ['db'],
@@ -47,6 +47,13 @@ define(["jquery"], function($) {
                 var index = {
                     _id: '_design/fiche',
                     views: {
+                        all: {
+                            map: function(doc) {
+                                if (doc.uid) { //if fiche (uid of fiche)
+                                    emit(doc._id);
+                                }
+                            }.toString()
+                        },
                         by_owner: {
                             map: function(doc) {
                                 if (doc.owner_id) {
@@ -58,6 +65,13 @@ define(["jquery"], function($) {
                             map: function(doc) {
                                 if (doc.uid) {
                                     emit(doc.uid);
+                                }
+                            }.toString()
+                        },
+                        search: {
+                            map: function(doc) {
+                                if (doc.uid) { //if fiche (uid of fiche)
+                                    emit([doc._id, doc.uid, doc.owner_id, doc.patient.firstname, doc.patient.lastname, doc.patient.birthdate, doc.patient.gender, doc.origin, doc.pathologys]);
                                 }
                             }.toString()
                         }
