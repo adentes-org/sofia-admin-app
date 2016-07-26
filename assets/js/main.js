@@ -35,12 +35,13 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 					//Clear all cache
 					delete localStorage.SofiaDBVersion
 					delete localStorage.SofiaCreds
+					delete localStorage.SofiaDBURL
 					delete localStorage.SofiaFicheDBName
 					window.location.reload();
 				}
 			}
 		})
-		
+
 		db.tools.login({isStatOnly : config.statOnly}).then(function(info){
 			console.log("We are in !",info)
 			if(!config.statOnly){ // We need to monitor users db if full admin
@@ -54,7 +55,7 @@ define(["jquery", "vue", "pouchdb","app/config","app/pages","app/db", "trumbowyg
 			$(".app>button#admin_user").show().html(db.config.creds.username);
 			window.setTimeout("S.app.$refs.page.$dispatch('onload')",100);
 		});
-		
+
 	})
 	return S;
 });

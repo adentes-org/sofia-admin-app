@@ -118,3 +118,108 @@ ins.diff span{
 del.diff span{
  color: #EE8177;
 }
+
+/* logs style based on : http://codepen.io/chriscoyier/pen/wauoL */
+
+.logs {
+	margin: 1em;
+        padding: 1em;
+	border: 1px #CCC solid;
+	border-radius: 10px;
+}
+
+.logs p {
+    margin: 0 0 1em;
+}
+
+.log {
+    overflow: hidden;
+    padding: 0 0 1em;
+    border-bottom: 1px solid #ddd;
+    margin: 0 0 1em;
+    *zoom: 1;
+}
+
+.log-img {
+    float: left;
+    margin-right: 33px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.log-img img {
+    display: block;
+}
+
+.log-body {
+    overflow: hidden;
+}
+
+.log .text {
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.log .text p:last-child {
+    margin: 0;
+}
+
+.log .attribution {
+    margin: 0.5em 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Decoration */
+
+.logs,
+.log {
+    position: relative;
+}
+
+.logs:before,
+.log:before,
+.log .text:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 65px;
+}
+
+.logs:before {
+    width: 3px;
+    top: -20px;
+    bottom: -20px;
+    background: rgba(0,0,0,0.1);
+}
+
+.log:before {
+    width: 9px;
+    height: 9px;
+    border: 3px solid #fff;
+    border-radius: 100px;
+    margin: 16px 0 0 -6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.2), inset 0 1px 1px rgba(0,0,0,0.1);
+    background: #ccc;
+}
+
+.log:hover:before {
+    background: orange;
+}
+
+.log .text:before {
+    top: 18px;
+    left: 78px;
+    width: 9px;
+    height: 9px;
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    border-color: #e5e5e5;
+    background: #fff;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+}
