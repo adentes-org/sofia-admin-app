@@ -13,7 +13,7 @@ define(["jquery"], function($) {
                 			var test = this;
                 			
                 			//db.query('index', { include_docs: false }).then({
-                			db.get('_design/fiche').then({
+                			db.get('_design/fiche').then(function () {
                 				//TODO test every veiw
                 				test.result = true;	
                 			}).catch(function (err) {
