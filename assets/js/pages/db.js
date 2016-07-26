@@ -63,25 +63,19 @@ define(["jquery"], function($) {
                         }
                     }
                 };
-
-                // save the design doc
-                vue.db.fiches.put(index).catch(function(err) {
-                    if (err.name === 'conflict') {
-                        // if doc already exists erase and retry
-                        return vue.db.fiches.get(index._id).then(function(doc) {
-                            return vue.db.fiches.remove(doc);
-                        }).catch(function(err) {
-                            console.log(err);
-                            alert(err.message);
-                        }).then(function(result) {
-                            // Regenerate 
-                            return vue.applyView();
-                        });
-                    } else {
-                        //Other error are to be logged
-                        console.log(err);
-                        alert(err.message);
-                    }
+                
+                vue.db.fiches.get(index._id).then(function(doc) { //Tryiing to get doc and corresponding _rev
+                	if(doc._rev){
+                		index._rev = doc._rev;
+                	}
+                }).then(function(doc) {
+	                // save the design doc
+	                return vue.db.fiches.put(index).catch(function(err) {
+	                        //Error are to be logged
+	                        console.log(err);
+	                        alert(err.message);
+	                	
+	        	});
                 });
             },
             testViews: function() {
