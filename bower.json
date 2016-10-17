@@ -44,7 +44,7 @@
       ],
       "jspdf" : "bower_components/jspdf/dist/jspdf.min.js",
       "milligram" : "bower_components/milligram/dist/milligram.min.css", 	
-      "trumbowyg" : "bower_components/trumbowyg/dist/ui/**"
+      "trumbowyg" : "bower_components/trumbowyg/dist/**"
     }
   },
   "private": true
