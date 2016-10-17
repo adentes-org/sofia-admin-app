@@ -46,7 +46,8 @@
       "milligram" : "bower_components/milligram/dist/milligram.min.css", 	
       "trumbowyg" : [
         "bower_components/trumbowyg/dist/trumbowyg.min.js", 	
-        "bower_components/trumbowyg/dist/ui/trumbowyg.min.css"
+        "bower_components/trumbowyg/dist/ui/trumbowyg.min.css",
+        "bower_components/trumbowyg/dist/ui/icons.svg"
       ]
     }
   },
